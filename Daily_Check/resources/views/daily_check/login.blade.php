@@ -5,7 +5,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="initial-scale=1, width=device-width" />
 
-  <link rel="stylesheet" href="./global.css" />
+  <link rel="stylesheet" href="login.css" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alfa Slab One:wght@400&display=swap" />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alice:wght@400&display=swap" />
 </head>
@@ -59,6 +59,9 @@
         <div class="self-stretch flex flex-row items-start justify-end py-0 pr-[18px] pl-5">
           <div class="h-[34px] flex-1 relative flex items-center justify-center">
             パスワードを忘れましたか？
+          </div>
+          <div>
+            @livewire('profile')
           </div>
         </div>
       </div>
