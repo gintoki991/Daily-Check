@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\ComponentController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,6 +14,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::view('/', 'welcome');
+
+Route::controller(ComponentController::class)
+    ->group(function(){
+    Route::get('/component/daily-check/login', 'showLogin')->name('login');
+    Route::get('/component/daily-check/home', 'showHome')->name('home');
+});
+
+
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
