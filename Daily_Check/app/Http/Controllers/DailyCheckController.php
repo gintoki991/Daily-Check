@@ -14,4 +14,9 @@ class DailyCheckController extends Controller
     {
         return view('/daily-check/home');
     }
+
+    public function store()
+    {
+        return view('/daily-check/report-creating');
+    }
 }
