@@ -53,9 +53,7 @@
             <div class="h-8.5 flex-1 relative flex items-center justify-center">
               パスワードを忘れましたか？
             </div>
-            <div>
-              @livewire('profile')
-            </div>
+
           </div>
         </div>
       </section>

@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ComponentController;
+use App\Http\Controllers\DailyCheckController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,10 +15,12 @@ use App\Http\Controllers\ComponentController;
 
 Route::view('/', 'welcome');
 
-Route::controller(ComponentController::class)
+Route::view('/navbar', 'navbar');
+
+Route::controller(DailyCheckController::class)
     ->group(function(){
-    Route::get('/component/daily-check/login', 'showLogin')->name('login');
-    Route::get('/component/daily-check/home', 'showHome')->name('home');
+    Route::get('/daily-check/login', 'showLogin')->name('login');
+    Route::get('/daily-check/home', 'showHome')->name('home');
 });
 
 
