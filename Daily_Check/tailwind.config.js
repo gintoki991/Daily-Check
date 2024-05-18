@@ -48,5 +48,8 @@ export default {
         preflight: false,
     },
 
-    plugins: [forms],
+    plugins: [
+        require('@tailwindcss/forms'),
+        forms
+    ],
 };

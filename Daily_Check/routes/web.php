@@ -21,6 +21,7 @@ Route::controller(DailyCheckController::class)
     ->group(function(){
     Route::get('/daily-check/login', 'showLogin')->name('login');
     Route::get('/daily-check/home', 'showHome')->name('home');
+    Route::get('/daily-check/report-creating', 'store')->name('store');
 });
 
 
