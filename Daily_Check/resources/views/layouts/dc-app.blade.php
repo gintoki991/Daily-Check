@@ -30,11 +30,15 @@
 
     <!-- ナビゲーションバーのコンポーネントを呼び出す -->
     <livewire:layout.dc-navigation />
-    
+
     <!-- Page Content -->
     <main>
       {{ $slot }}
     </main>
+
+    <!-- Page Footing -->
+    <x-footer/>
+
   </div>
 </body>
 

@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class ComponentController extends Controller
+class DailyCheckController extends Controller
 {
     public function showLogin() {
-        return view('/components/daily-check/login');
+        return view('/daily-check/login');
     }
 
     public function showHome()
     {
-        return view('/components/daily-check/home');
+        return view('/daily-check/home');
     }
 }
