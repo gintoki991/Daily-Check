@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DailyCheckController;
+use App\Http\Controllers\PhotoController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,6 +25,12 @@ Route::controller(DailyCheckController::class)
     Route::get('/daily-check/report-creating', 'store')->name('store');
 });
 
+Route::controller(PhotoController::class)
+    ->group(function(){
+    Route::get('/daily-check/report-creating', 'create')->name('login');
+    Route::get('/daily-check/report-creating', 'store')->name('home');
+    Route::get('/daily-check/photos/{photo}', 'show')->name('store');
+});
 
 
 Route::view('dashboard', 'dashboard')
