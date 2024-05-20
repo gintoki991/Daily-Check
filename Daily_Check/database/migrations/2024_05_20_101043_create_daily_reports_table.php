@@ -11,16 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('photos', function (Blueprint $table) {
+        Schema::create('daily_reports', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('site_id')->nullable();
             $table->unsignedBigInteger('scheduled_id')->nullable();
-            $table->string('path');
-            $table->string('part')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->string('time');
+            $table->string('comment')->nullable();
+            $table->string('person_in_charge');
             $table->timestamps();
 
-            $table->foreign('site_id')->references('id')->on('sites')->onDelete('cascade');
-            $table->foreign('scheduled_id')->references('id')->on('scheduleds')->onDelete('cascade');
+            $table->foreign('site_id')->references('id')->on('sites');
+            $table->foreign('scheduled_id')->references('id')->on('scheduleds');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
@@ -29,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('photos');
+        Schema::dropIfExists('daily_reports');
     }
 };

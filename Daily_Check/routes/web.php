@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DailyCheckController;
 use App\Http\Controllers\PhotoController;
+use App\Livewire\PhotoUpload;
+use App\Livewire\PhotoView;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,12 +27,17 @@ Route::controller(DailyCheckController::class)
     Route::get('/daily-check/report-creating', 'store')->name('store');
 });
 
-Route::controller(PhotoController::class)
-    ->group(function(){
-    Route::get('/daily-check/report-creating', 'create')->name('login');
-    Route::get('/daily-check/report-creating', 'store')->name('home');
-    Route::get('/daily-check/photos/{photo}', 'show')->name('store');
-});
+// Route::controller(PhotoController::class)
+//     ->group(function(){
+//     Route::get('/daily-check/photos/{photo}/download', 'store')->name('download');
+//     Route::get('/daily-check/photos/{photo}', 'show')->name('show');
+// });
+
+// livewireComponent
+// Route::get('upload', PhotoUpload::class);
+Route::get('upload', PhotoView::class);
+Route::get('/daily-check/photos/{photo}', PhotoView::class)->name('photo.view');
+Route::get('/daily-check/photos/{photo}/show', [PhotoView::class, 'show'])->name('photo.show');
 
 
 Route::view('dashboard', 'dashboard')
