@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('photos', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('site_id');
-            $table->unsignedBigInteger('scheduled_id');
+            $table->unsignedBigInteger('site_id')->nullable();
+            $table->unsignedBigInteger('scheduled_id')->nullable();
             $table->string('path');
-            $table->string('part');
+            $table->string('part')->nullable();
             $table->timestamps();
 
             $table->foreign('site_id')->references('id')->on('sites')->onDelete('cascade');

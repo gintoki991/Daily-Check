@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('scheduleds', function (Blueprint $table) {
             $table->id();
             $table->date('date');
-            $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('site_id');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('site_id')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');

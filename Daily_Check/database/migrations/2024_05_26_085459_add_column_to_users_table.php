@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->unsignedBigInteger('site_id')->after('id'); // site_idカラムを追加
+            $table->unsignedBigInteger('site_id')->nullable()->after('id'); // site_idカラムを追加
             $table->foreign('site_id')->references('id')->on('sites'); // 外部キー制約を追加
         });
     }
@@ -23,8 +23,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('site_id')->nullable(); // site_idカラムを削除
             $table->dropForeign(['site_id']); // 外部キー制約を削除
-            $table->dropColumn('site_id'); // site_idカラムを削除
         });
     }
 };
