@@ -5,9 +5,10 @@
   <meta charset="utf-8">
 </head>
 
-<body>
-  @livewire('report-creating')
-</body>
+<x-test-component />
+
+<!-- <body>
+  @livewire('test_creating')
+</body> -->
 
 </html>
-

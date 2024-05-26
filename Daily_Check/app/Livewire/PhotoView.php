@@ -16,9 +16,9 @@ class PhotoView extends Component
         $this->photos = Photo::all();
     }
 
-    public function show()
+    public function show($id)
     {
-        $photo = Photo::findOrFail($photoId);
+        $photo = Photo::findOrFail($id);
         $path = Storage::disk('public')->path($photo->path);
 
         // 画像の圧縮
@@ -31,6 +31,6 @@ class PhotoView extends Component
 
     public function render()
     {
-        return view('livewire.photo-view');
+        return view('livewire.photo-view')->layout('daily-check.photos');
     }
 }

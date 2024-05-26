@@ -2,7 +2,7 @@
 
   <x-slot name="header">
     <h2 class="font-semibold text-xl text-white text-center leading-tight">
-      {{ __('写真閲覧画面') }}
+      {{ __('書類閲覧画面') }}
     </h2>
   </x-slot>
 
@@ -12,7 +12,7 @@
 
         <!-- 一週間の予定（現場），当日の詳細情報 -->
         <div>
-          @livewire('image-resizer')
+          @livewire('documentUpload')
         </div>
 
       </div>

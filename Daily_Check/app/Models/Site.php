@@ -21,24 +21,24 @@ class Site extends Model
     }
 
     // documentsとのリレーション設定
-    // public function documents()
-    // {
-    //     return $this->hasMany(Document::class);
-    // }
-    // public function scheduleds()
-    // {
-    //     return $this->hasMany(Scheduled::class);
-    // }
-    // public function daily_reports()
-    // {
-    //     return $this->hasMany(Daily_report::class);
-    // }
-    // public function daily_reports_users_links()
-    // {
-    //     return $this->hasMany(Daily_reports_users_link::class);
-    // }
-    // public function photos()
-    // {
-    //     return $this->hasMany(Photo::class);
-    // }
+    public function documents()
+    {
+        return $this->hasMany(Document::class);
+    }
+    public function scheduleds()
+    {
+        return $this->hasMany(Scheduled::class);
+    }
+    public function daily_reports()
+    {
+        return $this->hasMany(DailyReport::class);
+    }
+    public function daily_reports_users_links()
+    {
+        return $this->hasMany(DailyReportUser::class);
+    }
+    public function photos()
+    {
+        return $this->hasMany(Photo::class);
+    }
 }

@@ -5,15 +5,8 @@
             <div class="flex flex-col text-center w-full mb-12">
                 <!-- <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">入力フォーム</h1> -->
             </div>
+
             <form wire:submit.prevent="store">
-                <!-- 日付を選択 -->
-                @livewire('date-picker')
-                <!-- 時間を選択 -->
-                <x-time-picker />
-                <!-- 写真をアップロード -->
-                <div>
-                    @livewire('photo-upload')
-                </div>
                 <!-- 現場を選択dropDown -->
                 <div class="lg:w-1/2 md:w-2/3 mx-auto">
                     <div class="flex flex-wrap -m-2">
@@ -23,7 +16,9 @@
                                 <div class="mt-1">
                                     <select wire:model="site_id" class="mt-1 block w-full rounded-md border border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                         <option value="">選択してください</option>
-                                        <option value="1">現場1</option>
+                                        @foreach($users as $user)
+                                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                        @endforeach
                                         <option value="2">現場2</option>
                                         <option value="3">現場3</option>
                                     </select>
@@ -38,7 +33,7 @@
                             </div>
                         </div>
                         <div class="p-2 w-full">
-                            
+
                             <!-- 現場に入った人チェックボックス -->
                             <div class="w-max">
                                 @foreach($users as $user)

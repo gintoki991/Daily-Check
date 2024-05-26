@@ -22,6 +22,8 @@ class User extends Authenticatable
         'email',
         'password',
         'belong_to',
+        'daily_report_id',
+        'site_id',
     ];
 
     /**
@@ -32,8 +34,6 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
-        'daily_report_id',
-        'site_id',
     ];
 
     // リレーション設定

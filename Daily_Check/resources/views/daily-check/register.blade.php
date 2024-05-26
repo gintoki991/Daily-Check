@@ -6,8 +6,7 @@
 </head>
 
 <body>
-  @livewire('report-creating')
+  @livewire('register')
 </body>
 
 </html>
-

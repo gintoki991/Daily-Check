@@ -3,8 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DailyCheckController;
 use App\Http\Controllers\PhotoController;
+use App\Livewire\DocumentUpload;
 use App\Livewire\PhotoUpload;
 use App\Livewire\PhotoView;
+use App\Livewire\TestCreating;
+use App\Livewire\Register;
+use App\Livewire\ReportCreating;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,28 +20,36 @@ use App\Livewire\PhotoView;
 |
 */
 
+
 Route::view('/', 'welcome');
 
 Route::view('/navbar', 'navbar');
 
 Route::controller(DailyCheckController::class)
     ->group(function(){
+    Route::get('/daily-check/test-creating', 'testCreate')->name('test.create');
+    Route::post('/daily-check/test-creating', 'testStore')->name('test.store');
+    Route::get('/daily-check/site_list_management', 'siteCreate')->name('site.create');
+    Route::post('/daily-check/site_list_management', 'siteStore')->name('site.store');
+
     Route::get('/daily-check/login', 'showLogin')->name('login');
     Route::get('/daily-check/home', 'showHome')->name('home');
-    Route::get('/daily-check/report-creating', 'store')->name('store');
+    // Route::get('/daily-check/photos', 'photoView')->name('photoView');
+    Route::get('/daily-check/photos/{photo}', 'showPhoto')->name('showPhoto');
+    // Route::get('/daily-check/document', 'index')->name('index');
 });
-
-// Route::controller(PhotoController::class)
-//     ->group(function(){
-//     Route::get('/daily-check/photos/{photo}/download', 'store')->name('download');
-//     Route::get('/daily-check/photos/{photo}', 'show')->name('show');
-// });
 
 // livewireComponent
 // Route::get('upload', PhotoUpload::class);
-Route::get('upload', PhotoView::class);
-Route::get('/daily-check/photos/{photo}', PhotoView::class)->name('photo.view');
-Route::get('/daily-check/photos/{photo}/show', [PhotoView::class, 'show'])->name('photo.show');
+Route::get('/daily-check/register', Register::class)->name('register');
+Route::get('/daily-check/report-creating', ReportCreating::class)->name('ReportCreating');
+
+Route::get('/daily-check/document', DocumentUpload::class)->name('document');
+Route::get('/daily-check/photos', PhotoView::class)->name('photo');
+
+// Route::get('/daily-check/test', TestCreating::class);
+// Route::get('/daily-check/test-creating', TestCreating::class)->name('test');
+Route::get('/article', fn () => view('article.index'));
 
 
 Route::view('dashboard', 'dashboard')
