@@ -10,11 +10,14 @@ class DailyReport extends Model
     use HasFactory;
 
     protected $fillable = [
-        'time',
+        'start_time',
+        'end_time',
         'comment',
         'person_in_charge',
         'scheduled_id',
-        'site_id'
+        'site_id',
+        'user_ids',
+        'users',
     ];
 
     // usersとのリレーション設定（中間テーブル使用）

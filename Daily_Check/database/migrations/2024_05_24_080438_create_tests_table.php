@@ -11,14 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('documents', function (Blueprint $table) {
+        Schema::create('tests', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('site_id')->nullable();
-            $table->string('name');
-            $table->string('pdf_path');
+            $table->string('belong_to')->nullable();
+            $table->string('name')->nullable();
+            // $table->string('email')->unique();
+            // $table->timestamp('email_verified_at')->nullable();
+            // $table->string('password');
+            // $table->rememberToken();
             $table->timestamps();
-
-            $table->foreign('site_id')->references('id')->on('sites');
         });
     }
 
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('documents');
+        Schema::dropIfExists('tests');
     }
 };

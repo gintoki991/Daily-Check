@@ -3,10 +3,19 @@
     <form wire:submit.prevent="upload">
         @csrf
         <div>
-            <label for="photo">Choose a photo:</label>
-            <input type="file" id="photo" wire:model="photo" required>
+            <input type="file" wire:model="photos" multiple class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <div class="mt-2">
+                @if ($photos)
+                <p>選択された写真:</p>
+                <ul>
+                    @foreach($photos as $photo)
+                    <li>{{ $photo->getClientOriginalName() }}</li>
+                    @endforeach
+                </ul>
+                @endif
+            </div>
         </div>
-        @error('photo') <span class="error">{{ $message }}</span> @enderror
+        @error('photos.*') <span class="error">{{ $message }}</span> @enderror
 
         <!-- 入力フォーム -->
         <div>

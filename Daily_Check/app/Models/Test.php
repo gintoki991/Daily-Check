@@ -5,19 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Document extends Model
+class Test extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'name',
-        'site_id',
-        'pdf_path',
+        'email',
+        // 'password',
+        'belong_to',
     ];
-
-    // siteとのリレーション設定
-    public function site()
-    {
-        return $this->belongsTo(Site::class);
-    }
 }

@@ -16,9 +16,10 @@ return new class extends Migration
             $table->unsignedBigInteger('site_id')->nullable();
             $table->unsignedBigInteger('scheduled_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->string('time');
-            $table->string('comment')->nullable();
+            $table->time('start_time');
+            $table->time('end_time');
             $table->string('person_in_charge');
+            $table->string('comment')->nullable();
             $table->timestamps();
 
             $table->foreign('site_id')->references('id')->on('sites');

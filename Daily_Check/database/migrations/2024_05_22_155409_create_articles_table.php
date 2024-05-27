@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('documents', function (Blueprint $table) {
+        Schema::create('articles', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('site_id')->nullable();
-            $table->string('name');
-            $table->string('pdf_path');
+            $table->string('title')->comment('タイトル');
+            $table->text('content')->comment('本文');
             $table->timestamps();
-
-            $table->foreign('site_id')->references('id')->on('sites');
         });
     }
 
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('documents');
+        Schema::dropIfExists('articles');
     }
 };

@@ -2,7 +2,7 @@
 
   <x-slot name="header">
     <h2 class="font-semibold text-xl text-white text-center leading-tight">
-      {{ __('写真閲覧画面') }}
+      {{ __('テスト画面') }}
     </h2>
   </x-slot>
 
@@ -10,10 +10,12 @@
     <section class="self-stretch flex items-center flex items-center justify-center min-h-screen text-center text-[1rem] text-black font-alice">
       <div class="self-stretch flex flex-col items-center justify-start gap-[0.812rem] max-w-full">
 
-        <!-- 一週間の予定（現場），当日の詳細情報 -->
-        <div>
-          @livewire('image-resizer')
-        </div>
+        <!-- テスト　登録フォーム -->
+        <x-test-component />
+
+        <!-- <body>
+  @livewire('test_creating')
+</body> -->
 
       </div>
     </section>
