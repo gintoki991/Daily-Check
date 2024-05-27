@@ -80,20 +80,28 @@ class DailyCheckController extends Controller
         return redirect()->route('create')->with('status', 'Registration successful!');
     }
 
-    public function SiteCreate()
+    public function siteCreate()
     {
-
         return view('/daily-check/site_list_management');
     }
     public function siteStore(Request $request)
     {
-        dd($request, $request->site_name);
-        $request->validate([
-            'site_name' => 'required|string|max:255',
-        ]);
-        Site::create([
-            'name' => $request->site_name,
-        ]);
+        try {
+            // バリデーションルールを指定する
+            $validated = $request->validate([
+                'site_name' => 'required|string|max:255',
+            ]);
+
+            // データを保存する
+            Site::create([
+                'name' => $validated['site_name'],
+            ]);
+
+            session()->flash('message', 'Site created successfully.');
+        } catch (ValidationException $e) {
+            // バリデーションエラーメッセージを表示
+            dd($e->errors());
+        }
         return redirect()->route('site.create')->with('status', 'Registration successful!');
     }
 

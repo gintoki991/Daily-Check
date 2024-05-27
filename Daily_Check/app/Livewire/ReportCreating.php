@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\DailyReport;
 use App\Models\Site;
 use App\Models\Photo;
+use Illuminate\Validation\ValidationException;
 
 class ReportCreating extends Component
 {
@@ -29,12 +30,11 @@ class ReportCreating extends Component
     protected $rules = [
         'start_time' => 'required',
         'end_time' => 'required',
-        'site' => 'required|integer',
+        'site_id' => 'required|integer|exists:sites,id', // 修正
         'person_in_charge' => 'required|string',
         'comment' => 'nullable|string|max:255',
         'user_ids' => 'array',
         'user_ids.*' => 'integer|exists:users,id',
-        'site_id' => 'require|exists:sites,id',// `sites`テーブルの`id`カラムに存在するかをバリデート
         'scheduled_id' => 'required|integer|exists:scheduleds,id',
     ];
 
