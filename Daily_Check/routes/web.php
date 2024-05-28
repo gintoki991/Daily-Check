@@ -28,9 +28,13 @@ Route::view('/navbar', 'navbar');
 Route::controller(DailyCheckController::class)
     ->group(function(){
     Route::get('/daily-check/test-creating', 'testCreate')->name('test.create');
-    Route::post('/daily-check/test-creating', 'testStore')->name('test.store');
+    // Route::post('/daily-check/test-creating', 'testStore')->name('test.store');
+    Route::post('/daily-check/test-creating', 'testDateStore')->name('test.dateStore');
+
     Route::get('/daily-check/site_list_management', 'siteCreate')->name('site.create');
     Route::post('/daily-check/site_list_management', 'siteStore')->name('site.store');
+
+    Route::post('/daily-check/report-creating', 'reportStore')->name('report.store');
 
     Route::get('/daily-check/login', 'showLogin')->name('login');
     Route::get('/daily-check/home', 'showHome')->name('home');

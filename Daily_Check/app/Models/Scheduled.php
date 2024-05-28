@@ -10,6 +10,9 @@ class Scheduled extends Model
     use HasFactory;
 
     protected $fillable = [
+        'year',
+        'month',
+        'day',
         'date',
         'user_id',
         'site_id'

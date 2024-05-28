@@ -2,7 +2,7 @@
 <div x-data="datePicker()" x-init="init()" class="flex items-center space-x-4">
   <div>
     <label for="year">年:</label>
-    <select id="year" x-model="year" @change="updateDate" class="mr-1">
+    <select id="year" name="year" x-model="year" @change="updateDate" class="mr-1">
       <template x-for="year in years" :key="year">
         <option :value="year" x-text="year"></option>
       </template>
@@ -10,7 +10,7 @@
   </div>
   <div>
     <label for="month">月:</label>
-    <select id="month" x-model="month" @change="updateDate" class="mr-1">
+    <select id="month" name="month" x-model="month" @change="updateDate" class="mr-1">
       <template x-for="month in months" :key="month">
         <option :value="month" x-text="month"></option>
       </template>
@@ -18,7 +18,7 @@
   </div>
   <div>
     <label for="day">日:</label>
-    <select id="day" x-model="day" @change="updateDate" class="mr-1">
+    <select id="day" name="day" x-model="day" @change="updateDate" class="mr-1">
       <template x-for="day in days" :key="day">
         <option :value="day" x-text="day"></option>
       </template>
@@ -51,11 +51,12 @@
         this.updateDate();
       },
       updateDate() {
+        console.log('updateDate called with date:', this.date);
         this.$refs.date.value = this.date;
-        this.$dispatch('date-changed', {
-          year: this.year,
-          month: this.month,
-          day: this.day
+        this.$dispatch('input', {
+          target: {
+            value: this.date
+          }
         });
       }
     }
