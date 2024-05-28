@@ -7,9 +7,15 @@
             </div>
 
             <form wire:submit.prevent="store">
-                <!-- 現場を選択dropDown -->
                 <div class="lg:w-1/2 md:w-2/3 mx-auto">
                     <div class="flex flex-wrap -m-2">
+                        <!-- 日付を選択 -->
+                        <div class="p-2 w-1/2">
+                            <x-date-picker wire:model="year" wire:model="month" wire:model="day" />
+                        </div>
+                        <!-- 時間を選択 -->
+                        <x-time-picker wire:model:start_time="start_time" wire:model:end_time="end_time" />
+                        <!-- 現場を選択dropDown -->
                         <div class="p-2 w-1/2">
                             <div class="mx-auto w-full max-w-xs">
                                 <label class="text-sm text-gray-800">現場を選択</label>

@@ -11,17 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('scheduleds', function (Blueprint $table) {
+        Schema::create('test_dates', function (Blueprint $table) {
             $table->id();
             $table->integer('year');
             $table->integer('month');
             $table->integer('day');
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->unsignedBigInteger('site_id')->nullable();
+            $table->time('start_time');
+            $table->time('end_time');
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('site_id')->references('id')->on('sites')->onDelete('cascade');
         });
     }
 
@@ -30,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('scheduleds');
+        Schema::dropIfExists('test_dates');
     }
 };

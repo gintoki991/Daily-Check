@@ -10,12 +10,14 @@
     <section class="self-stretch flex items-center flex items-center justify-center min-h-screen text-center text-[1rem] text-black font-alice">
       <div class="self-stretch flex flex-col items-center justify-start gap-[0.812rem] max-w-full">
 
-        <!-- テスト　登録フォーム -->
-        <x-test-component />
-
-        <!-- <body>
-  @livewire('test_creating')
-</body> -->
+        <form action="{{ route('test.dateStore') }}" method="POST">
+          @csrf
+          <!-- テスト　日付フォーム -->
+          <x-date-picker />
+          <!-- テスト　時間フォーム -->
+          <x-time-picker />
+          <button type="submit" class="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">提　出</button>
+        </form>
 
       </div>
     </section>

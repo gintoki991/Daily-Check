@@ -50,7 +50,7 @@ class User extends Authenticatable
     // DailyReportとのリレーション設定（中間テーブル使用）
     public function dailyReports()
     {
-        return $this->belongsToMany(DailyReport::class, 'daily_report_users', 'user_id', 'daily_report_id')
+        return $this->belongsToMany(DailyReport::class, 'daily_report_user', 'user_id', 'daily_report_id')
             ->withPivot('is_scheduled', 'is_actual', 'site_id')
             ->using(DailyReportUser::class);
     }
