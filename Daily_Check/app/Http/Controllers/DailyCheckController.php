@@ -1,176 +1,131 @@
 <?php
-namespace App\Livewire;
 
-use Livewire\Component;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Livewire\WithFileUploads;
-use App\Models\User;
-use App\Models\DailyReport;
-use App\Models\Site;
-use App\Models\Photo;
-use App\Models\Scheduled;
+namespace App\Http\Controllers;
+
 use Illuminate\Validation\ValidationException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use App\Models\Photo;
+use App\Models\User;
+use App\Models\Site;
+use App\Models\Test;
 
-class ReportCreating extends Component
+class DailyCheckController extends Controller
 {
-use WithFileUploads;
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    public function testCreate()
+    {
+        return view('/daily-check/test_creating');
+    }
+    public function testStore(Request $request)
+    {
+        try {
+            // バリデーションルールを指定する
+            $validated = $request->validate([
+                'belong_to' => 'required|string|max:255',
+                'name' => 'required|string|max:255',
+            ]);
 
-public $year;
-public $month;
-public $day;
-public $start_time;
-public $end_time;
-public $sites;
-public $person_in_charge;
-public $comment;
-public $user_ids = [];
-public $photos = [];
-public $part;
-public $site_id;
-public $scheduled_id;
-public $users;
+            // データを保存する
+            Test::create([
+                'belong_to' => $validated['belong_to'],
+                'name' => $validated['name'],
+            ]);
 
-protected $rules = [
-'year' => 'required|integer|min:2023|max:2100',
-'month' => 'required|integer|min:1|max:12',
-'day' => 'required|integer|min:1|max:31',
-'start_time' => 'required',
-'end_time' => 'required',
-'site_id' => 'required|integer|exists:sites,id',
-'person_in_charge' => 'required|string',
-'comment' => 'nullable|string|max:255',
-'user_ids' => 'array',
-'user_ids.*' => 'integer|exists:users,id',
-];
+            session()->flash('message', 'Test created successfully.');
+        } catch (ValidationException $e) {
+            // バリデーションエラーメッセージを表示
+            dd($e->errors());
+        }
+        return redirect()->route('test.create')->with('message', 'Test created successfully.');
+    }
 
-// 子コンポーネントからデータを受け取る
-protected $listeners = [
-'date-changed' => 'updateDate',
-'start-time-changed' => 'updateStartTime',
-'end-time-changed' => 'updateEndTime',
-'photosUpdated' => 'setPhotos',
-'partUpdated' => 'setPart',
-'siteIdUpdated' => 'setSiteId',
-'scheduledIdUpdated' => 'setScheduledId',
-];
 
-public function mount()
-{
-$this->users = User::all();
-$this->sites = Site::all();
-}
+    public function managerPage()
+    {
+        return view('/daily-check/manager_page');
+    }
 
-public function updateDate($year, $month, $day)
-{
-$this->year = $year;
-$this->month = $month;
-$this->day = $day;
-Log::info("Date updated to: $year-$month-$day");
-}
+    public function create()
+    {
+        return view('/daily-check/register');
+    }
 
-public function updateStartTime($data)
-{
-$this->start_time = sprintf('%02d:%02d:00', $data['hour'], $data['minute']);
-Log::info("Start time updated to: $this->start_time");
-}
+    public function register(Request $request)
+    {
+        // dd($request, $request->name);
+        $request->validate([
+            'belong_to' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email',
+            'password' => 'required|string|min:8',
+        ]);
+        User::create([
+            'belong_to' => $request->belong_to,
+            'name' => $request->name,
+            'email' => $request->email, 'password' => Hash::make($request->input('password')),
+        ]);
+        return redirect()->route('create')->with('status', 'Registration successful!');
+    }
 
-public function updateEndTime($data)
-{
-$this->end_time = sprintf('%02d:%02d:00', $data['hour'], $data['minute']);
-Log::info("End time updated to: $this->end_time");
-}
+    public function siteManagement()
+    {
+        return view('/daily-check/site_management');
+    }
+    public function siteStore(Request $request)
+    {
+        try {
+            // バリデーションルールを指定する
+            $validated = $request->validate([
+                'site_name' => 'required|string|max:255',
+            ]);
 
-public function setPhotos($photos)
-{
-$this->photos = $photos;
-}
+            // データを保存する
+            Site::create([
+                'name' => $validated['site_name'],
+            ]);
 
-public function setPart($part)
-{
-$this->part = $part;
-}
+            session()->flash('message', 'Site created successfully.');
+        } catch (ValidationException $e) {
+            // バリデーションエラーメッセージを表示
+            dd($e->errors());
+        }
+        return redirect()->route('site.management')->with('status', 'Registration successful!');
+    }
 
-public function setSiteId($site_id)
-{
-$this->site_id = $site_id;
-}
+    public function showLogin()
+    {
+        return view('/daily-check/login');
+    }
 
-public function setScheduledId($scheduled_id)
-{
-$this->scheduled_id = $scheduled_id;
-}
 
-public function store()
-{
-DB::beginTransaction();
-try {
-Log::info('バリデーション開始');
-$validated = $this->validate();
-Log::info('バリデーション成功: ', $validated);
+    public function showHome()
+    {
+        return view('/daily-check/home');
+    }
 
-$scheduled = Scheduled::firstOrCreate(
-[
-'year' => $this->year,
-'month' => $this->month,
-'day' => $this->day
-],
-[
-'user_id' => null,
-'site_id' => null
-]
-);
-$this->scheduled_id = $scheduled->id;
+    public function store()
+    {
+        return view('/daily-check/report-creating');
+    }
 
-$report = DailyReport::create([
-'year' => $this->year,
-'month' => $this->month,
-'day' => $this->day,
-'start_time' => $this->start_time,
-'end_time' => $this->end_time,
-'site_id' => $this->site_id,
-'scheduled_id' => $this->scheduled_id,
-'person_in_charge' => $this->person_in_charge,
-'comment' => $this->comment,
-]);
+    public function index()
+    {
+        return view('/daily-check/document');
+    }
 
-foreach ($this->photos as $photo) {
-$path = $photo->store('photos', 'public');
-$report->photos()->create([
-'path' => $path,
-'part' => $this->part,
-'site_id' => $this->site_id,
-'scheduled_id' => $this->scheduled_id
-]);
-}
+    public function photoView()
+    {
+        return view('/daily-check/photos');
+    }
 
-foreach ($this->user_ids as $user_id) {
-$report->users()->attach($user_id, [
-'site_id' => $this->site_id,
-'is_scheduled' => true,
-'is_actual' => false,
-]);
-}
+    public function showPhoto($id)
+    {
+        $photo = Photo::find($id);
 
-DB::commit();
-session()->flash('success', '日報が正常に提出されました。');
-$this->reset(['year', 'month', 'day', 'start_time', 'end_time', 'person_in_charge', 'comment', 'user_ids', 'photos', 'part', 'site_id', 'scheduled_id']);
-} catch (ValidationException $e) {
-DB::rollBack();
-Log::error('バリデーションエラー: ' . json_encode($e->errors()));
-session()->flash('error', 'バリデーションエラーが発生しました。');
-$this->resetErrorBag();
-} catch (\Exception $e) {
-DB::rollBack();
-Log::error('データの保存に失敗しました: ' . $e->getMessage());
-session()->flash('error', 'データの保存に失敗しました: ' . $e->getMessage());
-}
-}
-
-public function render()
-{
-return view('livewire.report-creating', [
-'users' => $this->users,
-])->layout('daily-check.report-creating');
-}
+        return view('/daily-check/photos/{photo}', compact('photo'));
+    }
 }
