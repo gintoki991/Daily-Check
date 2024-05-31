@@ -7,8 +7,10 @@ use App\Livewire\DocumentUpload;
 use App\Livewire\PhotoUpload;
 use App\Livewire\PhotoView;
 use App\Livewire\TestCreating;
-use App\Livewire\EmployeeManagement;
+use App\Livewire\EmployeeRegistration;
 use App\Livewire\ReportCreating;
+use App\Livewire\WorkersCheckList;
+use App\Livewire\ScheduleRegistration;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,9 +27,17 @@ Route::view('/', 'welcome');
 
 Route::view('/navbar', 'navbar');
 
+// テスト用
+Route::get('/daily-check/test-creating', function () {
+    return view('/daily-check/test_creating');
+});
+Route::get('/test', function () {
+    return view('test');
+});
+
 Route::controller(DailyCheckController::class)
     ->group(function () {
-        Route::get('/daily-check/test-creating', 'testCreate')->name('test.create');
+        // Route::get('/daily-check/test-creating', 'testCreate')->name('test.create');
         // Route::post('/daily-check/test-creating', 'testStore')->name('test.store');
         Route::post('/daily-check/test-creating', 'testDateStore')->name('test.dateStore');
 
@@ -46,7 +56,11 @@ Route::controller(DailyCheckController::class)
 
     // livewireComponent
     // Route::get('upload', PhotoUpload::class);
-Route::get('/daily-check/employee_management', EmployeeManagement::class)->name('employee.management');
+Route::get('/daily-check/employee_management', EmployeeRegistration::class)->name('employee.management');
+Route::get('/daily-check/workers_arrangement', WorkersCheckList::class)->name('workers.arrangement');
+
+Route::get('/livewire/schedule-registration', ScheduleRegistration::class)->name('schedules.create');
+
 Route::get('/daily-check/report-creating', ReportCreating::class)->name('ReportCreating');
 
 Route::get('/daily-check/document', DocumentUpload::class)->name('documentList');

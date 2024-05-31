@@ -1,8 +1,8 @@
-<x-admin-layout>
+<x-app-layout>
 
   <x-slot name="header">
     <h2 class="font-semibold text-xl text-white text-center leading-tight">
-      {{ __('従業員管理画面') }}
+      {{ __('テスト画面') }}
     </h2>
   </x-slot>
 
@@ -10,14 +10,17 @@
     <section class="self-stretch flex items-center flex items-center justify-center min-h-screen text-center text-[1rem] text-black font-alice">
       <div class="self-stretch flex flex-col items-center justify-start gap-[0.812rem] max-w-full">
 
-        <!-- 従業員一覧表表示，従業員の追加登録（所属，名前，パスワード，新規登録ボタン -->
-        <div>
-          <livewire:employee-list />
-          @livewire('employee-registration')
-        </div>
+        <form action="{{ route('test.dateStore') }}" method="POST">
+          @csrf
+          <!-- テスト　日付フォーム -->
+          <x-date-picker />
+          <!-- テスト　時間フォーム -->
+          <x-time-picker />
+          <button type="submit" class="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">提　出</button>
+        </form>
 
       </div>
     </section>
   </div>
 
-</x-admin-layout>
+</x-app-layout>

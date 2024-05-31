@@ -13,9 +13,7 @@ return new class extends Migration
     {
         Schema::create('scheduleds', function (Blueprint $table) {
             $table->id();
-            $table->integer('year');
-            $table->integer('month');
-            $table->integer('day');
+            $table->date('date');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('site_id')->nullable();
             $table->timestamps();

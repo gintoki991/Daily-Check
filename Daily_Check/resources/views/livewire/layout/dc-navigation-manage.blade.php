@@ -26,16 +26,16 @@ new class extends Component
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
-                        {{ __('Dashboard') }}
+                    <x-nav-link :href="route('workers.arrangement')" :active="request()->routeIs('dashboard')" wire:navigate>
+                        {{ __('人員配置計画') }}
                     </x-nav-link>
                     <x-nav-link :href="route('home')" :active="request()->routeIs('home')" wire:navigate>
                         {{ __('ホーム') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('photo')" :active="request()->routeIs('photo')" wire:navigate>
+                    <x-nav-link :href="route('photoList')" :active="request()->routeIs('photo')" wire:navigate>
                         {{ __('写真管理') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('document')" :active="request()->routeIs('document')" wire:navigate>
+                    <x-nav-link :href="route('documentList')" :active="request()->routeIs('document')" wire:navigate>
                         {{ __('書類管理') }}
                     </x-nav-link>
                     <x-nav-link :href="route('employee.management')" :active="request()->routeIs('ReportCreating')" wire:navigate>
@@ -92,8 +92,8 @@ new class extends Component
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
-                {{ __('Dashboard') }}
+            <x-responsive-nav-link :href="route('workers.arrangement')" :active="request()->routeIs('dashboard')" wire:navigate>
+                {{ __('人員配置計画') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                 {{ __('ホーム') }}
