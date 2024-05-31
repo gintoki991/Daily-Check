@@ -13,7 +13,7 @@
   <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
   <!-- Scripts -->
-  @vite(['resources/css/app.css', 'resources/js/app.js'])
+  @vite(['resources/css/app.css', 'resources/js/app.js', 'resources/js/flatpickr.js'])
   @livewireStyles
 </head>
 
@@ -38,9 +38,10 @@
     </main>
 
     <!-- Page Footing -->
-    <x-footer/>
+    <x-footer />
 
   </div>
   @livewireScript
 </body>
+
 </html>

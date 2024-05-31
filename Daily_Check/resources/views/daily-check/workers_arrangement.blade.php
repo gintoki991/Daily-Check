@@ -2,7 +2,7 @@
 
   <x-slot name="header">
     <h2 class="font-semibold text-xl text-white text-center leading-tight">
-      {{ __('従業員管理画面') }}
+      {{ __('人員配置計画画面') }}
     </h2>
   </x-slot>
 
@@ -10,10 +10,15 @@
     <section class="self-stretch flex items-center flex items-center justify-center min-h-screen text-center text-[1rem] text-black font-alice">
       <div class="self-stretch flex flex-col items-center justify-start gap-[0.812rem] max-w-full">
 
-        <!-- 従業員一覧表表示，従業員の追加登録（所属，名前，パスワード，新規登録ボタン -->
+        <!-- カレンダー，人員配置（現場，日付） -->
         <div>
-          <livewire:employee-list />
-          @livewire('employee-registration')
+          日付
+          <input type="text" id="plan_date" name="plan_date">
+          開始時間
+          <input type="text" id="start_time" name="start_time">
+          終了時間
+          <input type="text" id="end_time" name="end_time">
+          @livewire('schedule-registration')
         </div>
 
       </div>

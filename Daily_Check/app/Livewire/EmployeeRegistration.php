@@ -10,7 +10,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
-class EmployeeManagement extends Component
+class EmployeeRegistration extends Component
 {
     #[Validate('required|string|max:255')]
     public $belong_to = '';

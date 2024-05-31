@@ -12,12 +12,15 @@ use App\Models\Site;
 use App\Models\Photo;
 use App\Models\Scheduled;
 use Illuminate\Validation\ValidationException;
+use Carbon\Carbon;
 
 class ReportCreating extends Component
 {
     use WithFileUploads;
 
-    public $date;
+    public $year;
+    public $month;
+    public $day;
     public $start_time;
     public $end_time;
     public $sites;
@@ -31,7 +34,9 @@ class ReportCreating extends Component
     public $users;
 
     protected $rules = [
-        'date' => 'required|date|after_or_equal:2023-01-01',
+        'year' => 'required|integer|min:2023|max:2500',
+        'month' => 'required|integer|min:1|max:12',
+        'day' => 'required|integer|min:1|max:31',
         'start_time' => 'required',
         'end_time' => 'required',
         'site_id' => 'required|integer|exists:sites,id',
@@ -58,10 +63,12 @@ class ReportCreating extends Component
         $this->sites = Site::all();
     }
 
-    public function updateDate($date)
+    public function updateDate($year, $month, $day)
     {
-        $this->date = $date;
-        Log::info("Date updated to: $date");
+        $this->year = $year;
+        $this->month = $month;
+        $this->day = $day;
+        Log::info("Date updated to: $year-$month-$day");
     }
 
     public function updateStartTime($hour, $minute)
@@ -109,7 +116,9 @@ class ReportCreating extends Component
             // Scheduledテーブルにデータを保存
             $scheduled = Scheduled::firstOrCreate(
                 [
-                    'date' => $this->date,
+                    'year' => $this->year,
+                    'month' => $this->month,
+                    'day' => $this->day,
                     'site_id' => $this->site_id
                 ],
                 [
@@ -148,7 +157,7 @@ class ReportCreating extends Component
 
             DB::commit();
             session()->flash('success', '日報が正常に提出されました。');
-            $this->reset(['date', 'start_time', 'end_time', 'person_in_charge', 'comment', 'user_ids', 'photos', 'part', 'site_id', 'scheduled_id']);
+            $this->reset(['year', 'month', 'day', 'start_time', 'end_time', 'person_in_charge', 'comment', 'user_ids', 'photos', 'part', 'site_id', 'scheduled_id']);
         } catch (ValidationException $e) {
             DB::rollBack();
             Log::error('バリデーションエラー: ' . json_encode($e->errors()));

@@ -1,4 +1,3 @@
-<!-- resources/views/components/date-picker.blade.php -->
 <div x-data="datePicker()" x-init="init()" class="flex items-center space-x-4">
   <div>
     <label for="year">年:</label>
@@ -24,7 +23,7 @@
       </template>
     </select>
   </div>
-  <input type="hidden" name="date" x-ref="date" x-model="date" @input="$dispatch('input', { target: { value: date } })">
+  <input type="hidden" name="date" x-ref="date" :value="formattedDate">
 </div>
 
 <script>
@@ -34,30 +33,32 @@
       month: new Date().getMonth() + 1,
       day: new Date().getDate(),
       years: Array.from({
-        length: 3
-      }, (_, i) => new Date().getFullYear() - 1 + i),
+        length: 100
+      }, (_, i) => new Date().getFullYear() - i),
       months: Array.from({
         length: 12
       }, (_, i) => i + 1),
-      get days() {
-        return Array.from({
-          length: new Date(this.year, this.month, 0).getDate()
-        }, (_, i) => i + 1);
-      },
-      get date() {
-        return `${this.year}-${String(this.month).padStart(2, '0')}-${String(this.day).padStart(2, '0')}`;
-      },
+      days: [],
       init() {
+        this.updateDays();
         this.updateDate();
       },
+      updateDays() {
+        const daysInMonth = new Date(this.year, this.month, 0).getDate();
+        this.days = Array.from({
+          length: daysInMonth
+        }, (_, i) => i + 1);
+        if (!this.days.includes(this.day)) {
+          this.day = this.days[0];
+        }
+      },
       updateDate() {
-        this.$refs.date.value = this.date;
-        this.$dispatch('date-changed', {
-          year: this.year,
-          month: this.month,
-          day: this.day
-        });
+        this.updateDays();
+        this.$refs.date.value = this.formattedDate;
+      },
+      get formattedDate() {
+        return `${this.year}-${String(this.month).padStart(2, '0')}-${String(this.day).padStart(2, '0')}`;
       }
-    }
+    };
   }
 </script>

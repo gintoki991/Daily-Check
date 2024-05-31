@@ -9,7 +9,7 @@ class DailyReportUser extends Pivot
 {
     use HasFactory;
 
-    protected $table = 'daily_report_users';
+    protected $table = 'daily_report_user';
 
     protected $fillable = [
         'daily_report_id',

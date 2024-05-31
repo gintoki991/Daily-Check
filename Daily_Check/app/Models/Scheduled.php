@@ -10,9 +10,6 @@ class Scheduled extends Model
     use HasFactory;
 
     protected $fillable = [
-        'year',
-        'month',
-        'day',
         'date',
         'user_id',
         'site_id'
@@ -35,8 +32,8 @@ class Scheduled extends Model
         return $this->hasMany(Photo::class);
     }
     // daily_reportsとのリレーション設定
-    // public function daily_reports()
-    // {
-    //     return $this->hasMany(Daily_report::class);
-    // }
+    public function daily_reports()
+    {
+        return $this->hasMany(DailyReport::class);
+    }
 }

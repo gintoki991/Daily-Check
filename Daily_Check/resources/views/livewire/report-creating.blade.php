@@ -11,10 +11,14 @@
                     <div class="flex flex-wrap -m-2">
                         <!-- 日付を選択 -->
                         <div class="p-2 w-1/2">
-                            <x-date-picker wire:model="year" wire:model="month" wire:model="day" />
+                            <label for="report_create_date" class="text-sm text-gray-800">日付を選択</label>
+                            <input type="date" id="report_create_date" wire:model="date"><br>
+                            <!-- 時間を選択 -->
+                            <label for="start_time" class="text-sm text-gray-800">開始時間</label>
+                            <input type="time" id="start_time" wire:model="start_time"><br>
+                            <label for="end_time" class="text-sm text-gray-800">終了時間</label>
+                            <input type="time" id="end_time" wire:model="end_time"><br>
                         </div>
-                        <!-- 時間を選択 -->
-                        <x-time-picker wire:model:start_time="start_time" wire:model:end_time="end_time" />
                         <!-- 現場を選択dropDown -->
                         <div class="p-2 w-1/2">
                             <div class="mx-auto w-full max-w-xs">
