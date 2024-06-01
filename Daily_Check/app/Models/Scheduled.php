@@ -12,7 +12,8 @@ class Scheduled extends Model
     protected $fillable = [
         'date',
         'user_id',
-        'site_id'
+        'site_id',
+        'photo_id',
     ];
 
      // userとのリレーション設定

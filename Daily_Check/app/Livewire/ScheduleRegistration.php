@@ -6,7 +6,8 @@ use Livewire\Component;
 use App\Models\Site;
 use App\Models\User;
 use App\Models\Scheduled;
-use App\Models\DailyReportUser;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\DB;
 
 class ScheduleRegistration extends Component
 {
@@ -38,26 +39,30 @@ class ScheduleRegistration extends Component
             'selectedEmployees' => 'required|array',
             'selectedEmployees.*' => 'exists:users,id',
         ]);
+        // dd($this);
 
-        foreach ($this->selectedEmployees as $employeeId) {
-            Scheduled::create([
-                'year' => date('Y', strtotime($this->selectedDate)),
-                'month' => date('m', strtotime($this->selectedDate)),
-                'day' => date('d', strtotime($this->selectedDate)),
-                'user_id' => $employeeId,
-                'site_id' => $this->selectedSite,
-            ]);
+        DB::beginTransaction();
 
-            DailyReportUser::create([
-                'daily_report_id' => $this->selectedDate, // 日報IDが必要な場合は適切に設定してください
-                'user_id' => $employeeId,
-                'is_scheduled' => true,
-                'is_actual' => false,
-                'site_id' => $this->selectedSite,
-            ]);
+        try {
+            foreach ($this->selectedEmployees as $employeeId) {
+                Scheduled::create([
+                    'date' => $this->selectedDate,
+                    'user_id' => $employeeId,
+                    'site_id' => $this->selectedSite,
+                    'is_scheduled' => true,
+                    'is_actual' => false,
+                ]);
+            }
+
+            DB::commit();
+            session()->flash('message', '登録が成功しました！');
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            session()->flash('error', 'バリデーションエラーが発生しました。');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->flash('error', 'データの保存に失敗しました: ' . $e->getMessage());
         }
-
-        session()->flash('message', '登録が成功しました！');
     }
 
     public function render()
@@ -65,6 +70,6 @@ class ScheduleRegistration extends Component
         return view('livewire.schedule-registration', [
             'sites' => $this->sites,
             'employees' => $this->employees,
-        ])->layout('daily-check/workers_arrangement.blade');
+        ])->layout('daily-check.workers_arrangement');
     }
 }

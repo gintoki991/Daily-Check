@@ -16,8 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('daily_report_id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('site_id');
-            $table->boolean('is_scheduled');
-            $table->boolean('is_actual');
+            $table->boolean('is_scheduled')->default(false);
+            $table->boolean('is_actual')->default(false);
             $table->timestamps();
 
             $table->foreign('daily_report_id')->references('id')->on('daily_reports')->onDelete('cascade');

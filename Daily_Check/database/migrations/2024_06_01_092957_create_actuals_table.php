@@ -6,20 +6,18 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('scheduleds', function (Blueprint $table) {
+        Schema::create('actuals', function (Blueprint $table) {
             $table->id();
-            $table->date('date');
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('scheduled_id');
+            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('site_id');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('scheduled_id')->references('id')->on('scheduleds')->onDelete('cascade');
             $table->foreign('site_id')->references('id')->on('sites')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('scheduleds');
+        Schema::dropIfExists('actuals');
     }
 };
