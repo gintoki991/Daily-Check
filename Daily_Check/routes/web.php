@@ -9,6 +9,7 @@ use App\Livewire\PhotoView;
 use App\Livewire\TestCreating;
 use App\Livewire\EmployeeRegistration;
 use App\Livewire\ReportCreating;
+use App\Livewire\ReportDisplay;
 use App\Livewire\WorkersCheckList;
 use App\Livewire\ScheduleRegistration;
 /*
@@ -62,6 +63,7 @@ Route::get('/daily-check/workers_arrangement', WorkersCheckList::class)->name('w
 Route::get('/livewire/schedule-registration', ScheduleRegistration::class)->name('schedules.create');
 
 Route::get('/daily-check/report-creating', ReportCreating::class)->name('ReportCreating');
+Route::get('/daily-check/report-display', ReportDisplay::class)->name('ReportDisplay');
 
 Route::get('/daily-check/document', DocumentUpload::class)->name('documentList');
 Route::get('/daily-check/photos', PhotoView::class)->name('photoList');

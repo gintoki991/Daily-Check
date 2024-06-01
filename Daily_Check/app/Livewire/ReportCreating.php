@@ -11,6 +11,8 @@ use App\Models\DailyReport;
 use App\Models\Site;
 use App\Models\Photo;
 use App\Models\Scheduled;
+use App\Models\Actual;
+use App\Models\DailyReportUser;
 use Illuminate\Validation\ValidationException;
 
 class ReportCreating extends Component
@@ -23,79 +25,28 @@ class ReportCreating extends Component
     public $sites;
     public $person_in_charge;
     public $comment;
-    public $user_ids = [];
+    public $selectedEmployees = [];
     public $photos = [];
     public $part;
-    public $site_id;
+    public $selectedSite;
     public $scheduled_id;
-    public $users;
+    public $employees;
 
     protected $rules = [
         'date' => 'required|date|after_or_equal:2023-01-01',
         'start_time' => 'required',
         'end_time' => 'required',
-        'site_id' => 'required|integer|exists:sites,id',
-        'person_in_charge' => 'required|string',
+        'selectedSite' => 'required|integer|exists:sites,id',
+        'person_in_charge' => 'required|integer|exists:users,id',
         'comment' => 'nullable|string|max:255',
-        'user_ids' => 'array',
-        'user_ids.*' => 'integer|exists:users,id',
-    ];
-
-    // 子コンポーネントからデータを受け取る
-    protected $listeners = [
-        'date-changed' => 'updateDate',
-        'start-time-changed' => 'updateStartTime',
-        'end-time-changed' => 'updateEndTime',
-        'photosUpdated' => 'setPhotos',
-        'partUpdated' => 'setPart',
-        'siteIdUpdated' => 'setSiteId',
-        'scheduledIdUpdated' => 'setScheduledId',
+        'selectedEmployees' => 'array',
+        'selectedEmployees.*' => 'integer|exists:users,id',
     ];
 
     public function mount()
     {
-        $this->users = User::all();
+        $this->employees = User::all();
         $this->sites = Site::all();
-    }
-
-    public function updateDate($date)
-    {
-        $this->date = $date;
-        Log::info("Date updated to: $date");
-    }
-
-    public function updateStartTime($hour, $minute)
-    {
-        Log::info("Received start-time-changed event with hour: $hour, minute: $minute");
-        $this->start_time = sprintf('%02d:%02d:00', $hour, $minute);
-        Log::info("Start time updated to: $this->start_time");
-    }
-
-    public function updateEndTime($hour, $minute)
-    {
-        Log::info("Received end-time-changed event with hour: $hour, minute: $minute");
-        $this->end_time = sprintf('%02d:%02d:00', $hour, $minute);
-        Log::info("End time updated to: $this->end_time");
-    }
-
-    public function setPhotos($photos)
-    {
-        $this->photos = $photos;
-    }
-
-    public function setPart($part)
-    {
-        $this->part = $part;
-    }
-
-    public function setSiteId($site_id)
-    {
-        $this->site_id = $site_id;
-    }
-
-    public function setScheduledId($scheduled_id)
-    {
-        $this->scheduled_id = $scheduled_id;
     }
 
     public function store()
@@ -110,10 +61,10 @@ class ReportCreating extends Component
             $scheduled = Scheduled::firstOrCreate(
                 [
                     'date' => $this->date,
-                    'site_id' => $this->site_id
+                    'site_id' => $this->selectedSite
                 ],
                 [
-                    'user_id' => null
+                    'user_id' => $this->person_in_charge
                 ]
             );
             $this->scheduled_id = $scheduled->id;
@@ -122,7 +73,7 @@ class ReportCreating extends Component
             $report = DailyReport::create([
                 'start_time' => $this->start_time,
                 'end_time' => $this->end_time,
-                'site_id' => $this->site_id,
+                'site_id' => $this->selectedSite,
                 'scheduled_id' => $this->scheduled_id,
                 'person_in_charge' => $this->person_in_charge,
                 'comment' => $this->comment,
@@ -133,22 +84,28 @@ class ReportCreating extends Component
                 $report->photos()->create([
                     'path' => $path,
                     'part' => $this->part,
-                    'site_id' => $this->site_id,
-                    'scheduled_id' => $this->scheduled_id
+                    'site_id' => $this->selectedSite,
                 ]);
             }
 
-            foreach ($this->user_ids as $user_id) {
-                $report->users()->attach($user_id, [
-                    'site_id' => $this->site_id,
-                    'is_scheduled' => true,
-                    'is_actual' => false,
+            foreach ($this->selectedEmployees as $employeeId) {
+                DailyReportUser::create([
+                    'daily_report_id' => $report->id,
+                    'user_id' => $employeeId,
+                    'site_id' => $this->selectedSite,
+                    'is_actual' => true, // 修正部分
+                ]);
+
+                Actual::create([
+                    'scheduled_id' => $this->scheduled_id,
+                    'user_id' => $employeeId,
+                    'site_id' => $this->selectedSite,
                 ]);
             }
 
             DB::commit();
             session()->flash('success', '日報が正常に提出されました。');
-            $this->reset(['date', 'start_time', 'end_time', 'person_in_charge', 'comment', 'user_ids', 'photos', 'part', 'site_id', 'scheduled_id']);
+            $this->reset(['date', 'start_time', 'end_time', 'person_in_charge', 'comment', 'selectedEmployees', 'photos', 'part', 'selectedSite', 'scheduled_id']);
         } catch (ValidationException $e) {
             DB::rollBack();
             Log::error('バリデーションエラー: ' . json_encode($e->errors()));
@@ -164,7 +121,8 @@ class ReportCreating extends Component
     public function render()
     {
         return view('livewire.report-creating', [
-            'users' => $this->users,
+            'employees' => $this->employees,
+            'sites' => $this->sites,
         ])->layout('daily-check.report-creating');
     }
 }

@@ -16,8 +16,6 @@ class DailyReport extends Model
         'person_in_charge',
         'scheduled_id',
         'site_id',
-        'user_ids',
-        'users',
     ];
 
     // usersとのリレーション設定（中間テーブル使用）
@@ -38,5 +36,9 @@ class DailyReport extends Model
     public function scheduled()
     {
         return $this->belongsTo(Scheduled::class);
+    }
+    public function personInCharge()
+    {
+        return $this->belongsTo(User::class, 'person_in_charge');
     }
 }

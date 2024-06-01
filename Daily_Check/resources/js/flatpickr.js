@@ -8,6 +8,9 @@ flatpickr("#plan_date", {
 flatpickr("#report_create_date", {
   "locale": Japanese
 });
+flatpickr("#report_display_date", {
+  "locale": Japanese
+});
 
 const setting = {
   "locale": Japanese,
