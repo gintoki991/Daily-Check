@@ -6,7 +6,6 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Photo;
 use App\Models\Site;
-use Illuminate\Support\Facades\Log;
 
 class PhotoList extends Component
 {

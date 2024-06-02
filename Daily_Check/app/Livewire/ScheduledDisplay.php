@@ -14,18 +14,16 @@ class ScheduledDisplay extends Component
     public $selectedSite;
     public $scheduledUsers = [];
 
-    protected $listeners = ['dateChanged'];
-
     public function mount()
     {
         $this->sites = Site::all();
         $this->selectedDate = Carbon::now()->format('Y-m-d');
         $this->selectedSite = null;
+        $this->loadScheduledUsers();
     }
 
-    public function dateChanged($date)
+    public function updatedSelectedDate()
     {
-        $this->selectedDate = $date;
         $this->loadScheduledUsers();
     }
 
@@ -43,6 +41,8 @@ class ScheduledDisplay extends Component
                 ->with('user')
                 ->get()
                 ->pluck('user');
+        } else {
+            $this->scheduledUsers = [];
         }
     }
 
@@ -51,6 +51,6 @@ class ScheduledDisplay extends Component
         return view('livewire.scheduled-display', [
             'sites' => $this->sites,
             'scheduledUsers' => $this->scheduledUsers,
-        ])->layout('daily-check.home');
+        ])->layout('daily-check.');
     }
 }

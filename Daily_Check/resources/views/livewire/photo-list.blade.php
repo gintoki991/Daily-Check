@@ -1,20 +1,21 @@
 <div>
     <div class="mb-4">
         <label for="siteSelect" class="block text-gray-700 text-sm font-bold mb-2">現場を選択:</label>
-        <select id="siteSelect" wire:model="site_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            <option value="">選択してください</option>
+        <div class="flex space-x-4">
             @foreach($sites as $site)
-            <option value="{{ $site->id }}">{{ $site->name }}</option>
+            <button wire:click="$set('site_id', {{ $site->id }})" class="px-4 py-2 border rounded {{ $site_id == $site->id ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700' }}">
+                {{ $site->name }}
+            </button>
             @endforeach
-        </select>
+        </div>
     </div>
 
     <div class="mb-4">
         <label class="block text-gray-700 text-sm font-bold mb-2">部位を選択:</label>
-        <div>
-            <button wire:click="$set('part', '屋根')" class="btn-part">屋根</button>
-            <button wire:click="$set('part', '外壁')" class="btn-part">外壁</button>
-            <button wire:click="$set('part', '軒天')" class="btn-part">軒天</button>
+        <div class="flex space-x-4">
+            <button wire:click="$set('part', '屋根')" class="px-4 py-2 border rounded {{ $part == '屋根' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700' }}">屋根</button>
+            <button wire:click="$set('part', '外壁')" class="px-4 py-2 border rounded {{ $part == '外壁' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700' }}">外壁</button>
+            <button wire:click="$set('part', '軒天')" class="px-4 py-2 border rounded {{ $part == '軒天' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700' }}">軒天</button>
         </div>
     </div>
 
@@ -43,11 +44,3 @@
     </div>
     @endif
 </div>
-
-<!-- <script>
-    document.addEventListener('livewire:load', function() {
-        Livewire.on('update-content', () => {
-            Livewire.emit('render');
-        });
-    });
-</script> -->
