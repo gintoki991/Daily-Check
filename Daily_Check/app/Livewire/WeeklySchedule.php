@@ -19,8 +19,8 @@ class WeeklySchedule extends Component
     public function loadWeeklySchedule()
     {
         $userId = Auth::id();
-        $startOfWeek = Carbon::now();
-        $endOfWeek = $startOfWeek->copy()->addDays(6);
+        $startOfWeek = Carbon::now()->startOfWeek();
+        $endOfWeek = $startOfWeek->copy()->endOfWeek();
 
         $scheduled = Scheduled::where('user_id', $userId)
             ->whereBetween('date', [$startOfWeek, $endOfWeek])
