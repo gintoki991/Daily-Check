@@ -4,58 +4,59 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Intervention\Image\Facades\Image;
+use App\Models\Photo;
+use App\Models\Site;
 use Illuminate\Support\Facades\Storage;
 
 class PhotoUpload extends Component
 {
     use WithFileUploads;
 
-    public $photos = [];
+    public $photo;
+    public $site_id;
     public $part;
-    public $site_id; // 外部キーとして使用
-    public $scheduled_id; // 外部キーとして使用
+    public $sites;
 
-    protected $rules = [
-        'photos.*' => 'image|max:1024', // 1MB max
-        'part' => 'required|string|max:255',
-        'site_id' => 'required|integer',
-        'scheduled_id' => 'required|integer',
-    ];
-
-    public function updatedPhotos()
+    public function mount()
     {
-        $this->emit('photosUpdated', $this->photos);
+        $this->sites = Site::all();
     }
 
-    public function updatedPart($value)
+    public function save()
     {
-        $this->emit('partUpdated', $value);
+        $this->validate([
+            'photo' => 'required|image|max:1024', // 1MBまでの画像
+            'site_id' => 'required|exists:sites,id',
+            'part' => 'required|in:屋根,外壁,軒天',
+        ]);
+
+        $path = $this->photo->store('photos', 'public');
+
+        // サムネイルの生成
+        $thumbnailPath = 'thumbnails/' . basename($path);
+        $image = \Intervention\Image\Facades\Image::make(Storage::disk('public')->path($path));
+        $image->resize(200, null, function ($constraint) {
+            $constraint->aspectRatio();
+        })->save(Storage::disk('public')->path($thumbnailPath));
+
+        Photo::create([
+            'path' => basename($path),
+            'site_id' => $this->site_id,
+            'part' => $this->part,
+        ]);
+
+        session()->flash('message', '写真が正常にアップロードされました。');
+
+        $this->reset(['photo', 'site_id', 'part']);
     }
 
-    public function updatedSiteId($value)
-    {
-        $this->emit('siteIdUpdated', $value);
-    }
-
-    public function updatedScheduledId($value)
-    {
-        $this->emit('scheduledIdUpdated', $value);
-    }
-
-    public function upload()
-    {
-        $validatedData = $this->validate();
-
-        // Do something with the uploaded photos and other data
-
-        session()->flash('success', 'Photos uploaded successfully.');
-
-        $this->reset(['photos', 'part', 'site_id', 'scheduled_id']);
-    }
 
     public function render()
     {
-        return view('livewire.photo-upload')->layout('daily-check.photos');
+        return view('livewire.photo-upload', [
+            'sites' => $this->sites,
+        ])->layout('daily-check.photo-upload');
     }
 }
+
+

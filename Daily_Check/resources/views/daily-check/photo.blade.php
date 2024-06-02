@@ -12,7 +12,8 @@
 
         <!-- 一週間の予定（現場），当日の詳細情報 -->
         <div>
-          @livewire('image-resizer')
+          @livewire('photo-upload')
+          @livewire('photo-list')
         </div>
 
       </div>

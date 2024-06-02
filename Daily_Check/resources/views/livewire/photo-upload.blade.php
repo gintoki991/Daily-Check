@@ -1,46 +1,40 @@
 <div>
-    {{-- Photo Upload --}}
-    <form wire:submit.prevent="upload">
-        @csrf
-        <div>
-            <input type="file" wire:model="photos" multiple class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-            <div class="mt-2">
-                @if ($photos)
-                <p>選択された写真:</p>
-                <ul>
-                    @foreach($photos as $photo)
-                    <li>{{ $photo->getClientOriginalName() }}</li>
-                    @endforeach
-                </ul>
-                @endif
-            </div>
-        </div>
-        @error('photos.*') <span class="error">{{ $message }}</span> @enderror
-
-        <!-- 入力フォーム -->
-        <div>
-            <label for="part">Part:</label>
-            <input type="text" id="part" wire:model="part">
-        </div>
-        @error('part') <span class="error">{{ $message }}</span> @enderror
-
-        <div>
-            <label for="site_id">Site ID:</label>
-            <input type="number" id="site_id" wire:model="site_id">
-        </div>
-        @error('site_id') <span class="error">{{ $message }}</span> @enderror
-
-        <div>
-            <label for="scheduled_id">Scheduled ID:</label>
-            <input type="number" id="scheduled_id" wire:model="scheduled_id">
-        </div>
-        @error('scheduled_id') <span class="error">{{ $message }}</span> @enderror
-
-        <div>
-            <button type="submit">Upload</button>
-        </div>
-    </form>
-    @if (session()->has('success'))
-    <p>{{ session('success') }}</p>
+    @if (session()->has('message'))
+    <div class="alert alert-success">
+        {{ session('message') }}
+    </div>
     @endif
+
+    <form wire:submit.prevent="save">
+        <div class="mb-4">
+            <label for="siteSelect" class="block text-gray-700 text-sm font-bold mb-2">現場を選択:</label>
+            <select id="siteSelect" wire:model="site_id" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <option value="">選択してください</option>
+                @foreach($sites as $site)
+                <option value="{{ $site->id }}">{{ $site->name }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="mb-4">
+            <label for="partSelect" class="block text-gray-700 text-sm font-bold mb-2">部位を選択:</label>
+            <select id="partSelect" wire:model="part" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <option value="">選択してください</option>
+                <option value="屋根">屋根</option>
+                <option value="外壁">外壁</option>
+                <option value="軒天">軒天</option>
+            </select>
+        </div>
+
+        <div class="mb-4">
+            <label for="photo" class="block text-gray-700 text-sm font-bold mb-2">写真:</label>
+            <input type="file" id="photo" wire:model="photo" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+        </div>
+
+        @error('photo') <span class="error">{{ $message }}</span> @enderror
+
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+            アップロード
+        </button>
+    </form>
 </div>

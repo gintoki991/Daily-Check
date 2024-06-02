@@ -3,16 +3,16 @@
 namespace App\Livewire;
 
 use Livewire\Component;
-use App\Models\DailyReport;
+use App\Models\Scheduled;
 use App\Models\Site;
 use Carbon\Carbon;
 
-class ReportDisplay extends Component
+class ScheduledDisplay extends Component
 {
     public $sites;
     public $selectedDate;
     public $selectedSite;
-    public $reports = [];
+    public $scheduledUsers = [];
 
     protected $listeners = ['dateChanged'];
 
@@ -26,30 +26,31 @@ class ReportDisplay extends Component
     public function dateChanged($date)
     {
         $this->selectedDate = $date;
-        $this->loadReports();
+        $this->loadScheduledUsers();
     }
 
     public function selectSite($siteId)
     {
         $this->selectedSite = $siteId;
-        $this->loadReports();
+        $this->loadScheduledUsers();
     }
 
-    public function loadReports()
+    public function loadScheduledUsers()
     {
         if ($this->selectedDate && $this->selectedSite) {
-            $this->reports = DailyReport::where('date', $this->selectedDate)
+            $this->scheduledUsers = Scheduled::where('date', $this->selectedDate)
                 ->where('site_id', $this->selectedSite)
-                ->with('personInCharge')
-                ->get();
+                ->with('user')
+                ->get()
+                ->pluck('user');
         }
     }
 
     public function render()
     {
-        return view('livewire.report-display', [
+        return view('livewire.scheduled-display', [
             'sites' => $this->sites,
-            'reports' => $this->reports,
-        ])->layout('daily-check.report_display');
+            'scheduledUsers' => $this->scheduledUsers,
+        ])->layout('daily-check.home');
     }
 }

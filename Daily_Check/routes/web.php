@@ -5,7 +5,7 @@ use App\Http\Controllers\DailyCheckController;
 use App\Http\Controllers\PhotoController;
 use App\Livewire\DocumentUpload;
 use App\Livewire\PhotoUpload;
-use App\Livewire\PhotoView;
+use App\Livewire\PhotoList;
 use App\Livewire\TestCreating;
 use App\Livewire\EmployeeRegistration;
 use App\Livewire\ReportCreating;
@@ -66,7 +66,7 @@ Route::get('/daily-check/report-creating', ReportCreating::class)->name('ReportC
 Route::get('/daily-check/report-display', ReportDisplay::class)->name('ReportDisplay');
 
 Route::get('/daily-check/document', DocumentUpload::class)->name('documentList');
-Route::get('/daily-check/photos', PhotoView::class)->name('photoList');
+Route::get('/daily-check/photo', PhotoList::class)->name('photoList');
 
 // Route::get('/daily-check/test', TestCreating::class);
 // Route::get('/daily-check/test-creating', TestCreating::class)->name('test');

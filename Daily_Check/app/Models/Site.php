@@ -15,7 +15,7 @@ class Site extends Model
     ];
 
     // usersとのリレーション設定（中間テーブル使用）
-    public function users()
+    public function users() 
     {
         return $this->belongsToMany(User::class, 'article_tags', 'article_id', 'tag_id');
     }
