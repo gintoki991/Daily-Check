@@ -32,12 +32,13 @@ class DocumentUpload extends Component
     {
         $this->validate();
 
-        $path = $this->pdf->store('documents', 'public');
+        // PDFファイルを 'pdfs' ディスクに保存
+        $pdfPath = $this->pdf->store('pdfs', 'pdfs');
 
         Document::create([
             'name' => $this->name,
             'site_id' => $this->site_id,
-            'pdf_path' => $path,
+            'pdf_path' => $pdfPath,
         ]);
 
         session()->flash('message', '書類が正常に保存されました。');
