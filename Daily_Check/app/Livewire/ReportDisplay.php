@@ -15,18 +15,16 @@ class ReportDisplay extends Component
     public $selectedSite;
     public $reports = [];
 
-    protected $listeners = ['dateChanged'];
-
     public function mount()
     {
         $this->sites = Site::all();
         $this->selectedDate = Carbon::now()->format('Y-m-d');
         $this->selectedSite = null;
+        $this->loadReports();
     }
 
-    public function dateChanged($date)
+    public function updatedSelectedDate()
     {
-        $this->selectedDate = $date;
         $this->loadReports();
     }
 
@@ -45,6 +43,8 @@ class ReportDisplay extends Component
             })
                 ->with(['personInCharge', 'actualUsers'])
                 ->get();
+        } else {
+            $this->reports = [];
         }
     }
 
