@@ -41,4 +41,9 @@ class DailyReport extends Model
     {
         return $this->belongsTo(User::class, 'person_in_charge');
     }
+    public function actualUsers()
+    {
+        return $this->belongsToMany(User::class, 'daily_report_user', 'daily_report_id', 'user_id')
+        ->wherePivot('is_actual', true);
+    }
 }

@@ -5,7 +5,8 @@ namespace App\Livewire;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\Document;
-
+use App\Models\Site;
+use Illuminate\Validation\ValidationException;
 
 class DocumentUpload extends Component
 {
@@ -13,31 +14,40 @@ class DocumentUpload extends Component
 
     public $name;
     public $site_id;
-    public $pdf_path;
+    public $pdf;
+    public $sites;
+
+    public function mount()
+    {
+        $this->sites = Site::all();
+    }
 
     protected $rules = [
         'name' => 'required|string|max:255',
-    //     'site_id' => 'required|exists:sites,id',
-        // 'pdf_path' => 'required|file|mimes:pdf|max:10240', // 10MB以下のPDFファイル
+        'site_id' => 'required|integer|exists:sites,id',
+        'pdf' => 'required|mimes:pdf|max:10240', // 10MBまでのPDFファイル
     ];
 
     public function save()
     {
         $this->validate();
 
-        // デバッグのためのデータダンプ
-        dd($this);
-            Document::create([
+        $path = $this->pdf->store('documents', 'public');
+
+        Document::create([
             'name' => $this->name,
-            // 'site_id' => $this->site_id,
-            'pdf_path' => $this->pdf_path->getClientOriginalName(), // アップロードされたファイルの名前を表示
-            ]);
+            'site_id' => $this->site_id,
+            'pdf_path' => $path,
+        ]);
 
+        session()->flash('message', '書類が正常に保存されました。');
+        $this->reset(['name', 'site_id', 'pdf']);
     }
-
 
     public function render()
     {
-        return view('livewire.document-upload')->layout('daily-check.document');
+        return view('livewire.document-upload', [
+            'sites' => $this->sites,
+        ])->layout('daily-check.document');
     }
 }

@@ -43,7 +43,7 @@ class ReportDisplay extends Component
                 $query->where('date', $this->selectedDate)
                     ->where('site_id', $this->selectedSite);
             })
-                ->with('personInCharge')
+                ->with(['personInCharge', 'actualUsers'])
                 ->get();
         }
     }
