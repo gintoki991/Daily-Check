@@ -33,11 +33,11 @@ class PhotoUpload extends Component
         $path = $this->photo->store('photos', 'public');
 
         // サムネイルの生成
-        $thumbnailPath = 'thumbnails/' . basename($path);
-        $image = \Intervention\Image\Facades\Image::make(Storage::disk('public')->path($path));
-        $image->resize(200, null, function ($constraint) {
-            $constraint->aspectRatio();
-        })->save(Storage::disk('public')->path($thumbnailPath));
+        // $thumbnailPath = 'thumbnails/' . basename($path);
+        // $image = \Intervention\Image\Facades\Image::make(Storage::disk('public')->path($path));
+        // $image->resize(200, null, function ($constraint) {
+        //     $constraint->aspectRatio();
+        // })->save(Storage::disk('public')->path($thumbnailPath));
 
         Photo::create([
             'path' => basename($path),
@@ -58,5 +58,3 @@ class PhotoUpload extends Component
         ])->layout('daily-check.photo-upload');
     }
 }
-
-

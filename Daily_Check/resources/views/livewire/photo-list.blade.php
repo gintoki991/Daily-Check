@@ -18,39 +18,36 @@
         </div>
     </div>
 
-    @if ($photos->isNotEmpty())
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        @foreach ($photos as $photo)
-        <div class="border rounded p-4">
-            <h3 class="text-lg font-semibold">{{ $photo->part }}</h3>
-            <img src="{{ Storage::url('thumbnails/' . $photo->path) }}" alt="{{ $photo->part }}" class="w-full h-auto">
-        </div>
-        @endforeach
+    <div>
+        <p>選択された現場ID: {{ $site_id }}</p>
+        <p>選択された部位: {{ $part }}</p>
     </div>
+
+    @if ($site_id && $part)
     <div class="mt-4">
-        {{ $photos->links() }}
+        @if ($photos->count())
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            @foreach ($photos as $photo)
+            <div class="border rounded p-4">
+                <h3 class="text-lg font-semibold">{{ $photo->part }}</h3>
+                <img src="{{ Storage::url($photo->path) }}" alt="Photo">
+            </div>
+            @endforeach
+        </div>
+        <div class="mt-4">
+            {{ $photos->links() }}
+        </div>
+        @else
+        <p class="text-center">この現場には写真がありません。</p>
+        @endif
     </div>
-    @else
-    <p class="text-center">この条件に合う写真はありません。</p>
     @endif
 </div>
-@livewireScripts
-</body>
 
-</html>
-
-<style>
-    .btn-part {
-        background-color: #4A90E2;
-        color: white;
-        padding: 0.5rem 1rem;
-        margin: 0.5rem;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-    .btn-part:hover {
-        background-color: #357ABD;
-    }
-</style>
+<!-- <script>
+    document.addEventListener('livewire:load', function() {
+        Livewire.on('update-content', () => {
+            Livewire.emit('render');
+        });
+    });
+</script> -->
