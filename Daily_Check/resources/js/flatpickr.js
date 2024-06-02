@@ -14,6 +14,9 @@ flatpickr("#report_display_date", {
 flatpickr("#schedule_date", {
   "locale": Japanese
 });
+flatpickr("#photo_date", {
+  "locale": Japanese
+});
 flatpickr("#week_picker", {
   "locale": Japanese,
     minDate: "today",

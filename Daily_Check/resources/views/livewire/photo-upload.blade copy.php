@@ -27,11 +27,6 @@
         </div>
 
         <div class="mb-4">
-            <label for="photo_date" class="block text-gray-700 text-sm font-bold mb-2">日付を選択:</label>
-            <input type="date" id="photo_date" wire:model="photo_date" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-        </div>
-
-        <div class="mb-4">
             <label for="photo" class="block text-gray-700 text-sm font-bold mb-2">写真:</label>
             <input type="file" id="photo" wire:model="photo" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
         </div>
