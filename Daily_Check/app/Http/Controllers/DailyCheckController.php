@@ -12,6 +12,10 @@ use App\Models\Test;
 
 class DailyCheckController extends Controller
 {
+    public function edit($reportId)
+    {
+        return view('daily-check.report_editing', ['reportId' => $reportId]);
+    }
     public function __construct()
     {
         $this->middleware('auth');
@@ -40,26 +44,17 @@ class DailyCheckController extends Controller
             // バリデーションエラーメッセージを表示
             dd($e->errors());
         }
-        // $request->validate([
-        //     'belong_to' => 'required|string|max:255',
-        //     'name' => 'required|string|max:255',
-        //     // 'email' => 'required|email|max:255|unique:users,email',
-        // 'password' => 'required|string|min:8',
-        // ]);
-        // dd($request, $request->name);
-        // Test::create([
-        //     'belong_to' => $request->belong_to,
-        //     'name' => $request->name,
-        // 'email' => $request->email,
-        // 'password' => Hash::make($request->input('password')),
-        // ]);
         return redirect()->route('test.create')->with('message', 'Test created successfully.');
     }
 
 
+    public function managerPage()
+    {
+        return view('/daily-check/manager_page');
+    }
+
     public function create()
     {
-
         return view('/daily-check/register');
     }
 
@@ -80,21 +75,29 @@ class DailyCheckController extends Controller
         return redirect()->route('create')->with('status', 'Registration successful!');
     }
 
-    public function SiteCreate()
+    public function siteManagement()
     {
-
-        return view('/daily-check/site_list_management');
+        return view('/daily-check/site_management');
     }
     public function siteStore(Request $request)
     {
-        dd($request, $request->site_name);
-        $request->validate([
-            'site_name' => 'required|string|max:255',
-        ]);
-        Site::create([
-            'name' => $request->site_name,
-        ]);
-        return redirect()->route('site.create')->with('status', 'Registration successful!');
+        try {
+            // バリデーションルールを指定する
+            $validated = $request->validate([
+                'site_name' => 'required|string|max:255',
+            ]);
+
+            // データを保存する
+            Site::create([
+                'name' => $validated['site_name'],
+            ]);
+
+            session()->flash('message', 'Site created successfully.');
+        } catch (ValidationException $e) {
+            // バリデーションエラーメッセージを表示
+            dd($e->errors());
+        }
+        return redirect()->route('site.management')->with('status', 'Registration successful!');
     }
 
     public function showLogin()

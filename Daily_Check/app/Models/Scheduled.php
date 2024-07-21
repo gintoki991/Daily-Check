@@ -12,7 +12,8 @@ class Scheduled extends Model
     protected $fillable = [
         'date',
         'user_id',
-        'site_id'
+        'site_id',
+        'photo_id',
     ];
 
      // userとのリレーション設定
@@ -32,8 +33,8 @@ class Scheduled extends Model
         return $this->hasMany(Photo::class);
     }
     // daily_reportsとのリレーション設定
-    // public function daily_reports()
-    // {
-    //     return $this->hasMany(Daily_report::class);
-    // }
+    public function daily_reports()
+    {
+        return $this->hasMany(DailyReport::class);
+    }
 }

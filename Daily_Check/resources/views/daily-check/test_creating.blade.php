@@ -1,14 +1,35 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="ja">
 
 <head>
-  <meta charset="utf-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calendar Test</title>
+
+  <!-- FullCalendarのCSS -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.9.0/main.min.css" rel="stylesheet">
+
+  <!-- FullCalendarのJavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.9.0/main.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
-<x-test-component />
+<body>
+  <div id="calendar"></div>
 
-<!-- <body>
-  @livewire('test_creating')
-</body> -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var calendarEl = document.getElementById('calendar');
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        locale: 'ja',
+        dateClick: function(info) {
+          alert('Clicked date: ' + info.dateStr);
+        }
+      });
+      calendar.render();
+    });
+  </script>
+</body>
 
 </html>

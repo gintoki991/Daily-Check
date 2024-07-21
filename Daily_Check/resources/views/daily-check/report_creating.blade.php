@@ -2,7 +2,7 @@
 
   <x-slot name="header">
     <h2 class="font-semibold text-xl text-white text-center leading-tight">
-      {{ __('現場（一覧）管理画面 site_list_management') }}
+      {{ __('日報作成画面') }}
     </h2>
   </x-slot>
 
@@ -10,9 +10,9 @@
     <section class="self-stretch flex items-center flex items-center justify-center min-h-screen text-center text-[1rem] text-black font-alice">
       <div class="self-stretch flex flex-col items-center justify-start gap-[0.812rem] max-w-full">
 
-        <!-- 現場の追加登録フォーム -->
+        <!-- 一週間の予定（現場），当日の詳細情報 -->
         <div>
-          <x-site_addition />
+          @livewire('report-creating')
         </div>
 
       </div>

@@ -1,5 +1,5 @@
 <div>
-    {{-- 今月の日報 --}}
+    {{-- 1ヶ月カレンダー --}}
     <!-- Calendar -->
     <div class="space-y-0.5">
         <!-- Months -->

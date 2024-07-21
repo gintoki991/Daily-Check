@@ -1,8 +1,8 @@
-<x-app-layout>
+<x-admin-layout>
 
   <x-slot name="header">
     <h2 class="font-semibold text-xl text-white text-center leading-tight">
-      {{ __('写真閲覧画面') }}
+      {{ __('従業員管理画面') }}
     </h2>
   </x-slot>
 
@@ -10,13 +10,14 @@
     <section class="self-stretch flex items-center flex items-center justify-center min-h-screen text-center text-[1rem] text-black font-alice">
       <div class="self-stretch flex flex-col items-center justify-start gap-[0.812rem] max-w-full">
 
-        <!-- 一週間の予定（現場），当日の詳細情報 -->
+        <!-- 従業員一覧表表示，従業員の追加登録（所属，名前，パスワード，新規登録ボタン -->
         <div>
-          @livewire('image-resizer')
+          <livewire:employee-list />
+          @livewire('employee-registration')
         </div>
 
       </div>
     </section>
   </div>
 
-</x-app-layout>
+</x-admin-layout>

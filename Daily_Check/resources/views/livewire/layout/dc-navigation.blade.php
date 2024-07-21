@@ -36,16 +36,16 @@ new class extends Component
                     <x-nav-link :href="route('home')" :active="request()->routeIs('home')" wire:navigate>
                         {{ __('ホーム') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('photo')" :active="request()->routeIs('photo')" wire:navigate>
+                    <x-nav-link :href="route('photoList')" :active="request()->routeIs('photo')" wire:navigate>
                         {{ __('写真') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('document')" :active="request()->routeIs('document')" wire:navigate>
+                    <x-nav-link :href="route('documentList')" :active="request()->routeIs('document')" wire:navigate>
                         {{ __('書類') }}
                     </x-nav-link>
                     <x-nav-link :href="route('ReportCreating')" :active="request()->routeIs('ReportCreating')" wire:navigate>
                         {{ __('日報作成') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
+                    <x-nav-link :href="route('ReportDisplay')" :active="request()->routeIs('ReportDisplay')" wire:navigate>
                         {{ __('日報閲覧') }}
                     </x-nav-link>
                 </div>
@@ -99,19 +99,19 @@ new class extends Component
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
+            <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')" wire:navigate>
                 {{ __('ホーム') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
+            <x-responsive-nav-link :href="route('photoList')" :active="request()->routeIs('photoList')" wire:navigate>
                 {{ __('写真') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
+            <x-responsive-nav-link :href="route('documentList')" :active="request()->routeIs('documentList')" wire:navigate>
                 {{ __('書類') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
+            <x-responsive-nav-link :href="route('ReportCreating')" :active="request()->routeIs('ReportCreating')" wire:navigate>
                 {{ __('日報作成') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
+            <x-responsive-nav-link :href="route('ReportDisplay')" :active="request()->routeIs('ReportDisplay')" wire:navigate>
                 {{ __('日報閲覧') }}
             </x-responsive-nav-link>
         </div>

@@ -12,7 +12,9 @@
 
       <!-- 一週間の予定（現場），当日の詳細情報 -->
         <div>
-          @livewire('current-day-information')
+          @livewire('daily-board')
+          @livewire('weekly-schedule')
+          @livewire('scheduled-display')
         </div>
 
       </div>

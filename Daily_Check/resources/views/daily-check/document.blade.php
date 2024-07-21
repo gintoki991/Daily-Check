@@ -12,6 +12,7 @@
 
         <!-- 一週間の予定（現場），当日の詳細情報 -->
         <div>
+          @livewire('document-list')
           @livewire('documentUpload')
         </div>
 

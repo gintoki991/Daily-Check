@@ -1,53 +1,6 @@
 <section class="text-gray-600 body-font overflow-hidden">
     <div class="container px-5 py-24 mx-auto">
         <div class="-my-8 divide-y-2 divide-gray-100">
-            <!-- 一週間分の現場予定 -->
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
-                    <caption class="font-semibold text-white caption-top px-4 py-2">
-                        今週の予定
-                    </caption>
-                    <thead class="">
-                        <tr>
-                            <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">日付</th>
-                            <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">現場</th>
-                            <th class="px-4 py-2"></th>
-                        </tr>
-                    </thead>
-
-                    <tbody class="divide-y divide-gray-200">
-                        <tr>
-                            <td class="whitespace-nowrap px-4 py-2 text-gray-700">2024年05月15日（月）</td>
-                            <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">屋　上</td>
-                            <td class="whitespace-nowrap px-4 py-2">
-                                <a href="#" class="inline-block rounded bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-700">
-                                    詳細
-                                </a>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="whitespace-nowrap px-4 py-2 text-gray-700">2024年05月15日（月）</td>
-                            <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">市民体育館</td>
-                            <td class="whitespace-nowrap px-4 py-2">
-                                <a href="#" class="inline-block rounded bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-700">
-                                    詳細
-                                </a>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td class="whitespace-nowrap px-4 py-2 text-gray-700">2024年05月15日（月）</td>
-                            <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">別　邸</td>
-                            <td class="whitespace-nowrap px-4 py-2">
-                                <a href="#" class="inline-block rounded bg-indigo-600 px-4 py-2 text-xs font-medium text-white hover:bg-indigo-700">
-                                    詳細
-                                </a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
 
             <!-- 日報1日分 -->
             <div class="text-white py-8 flex flex-wrap md:flex-nowrap">
