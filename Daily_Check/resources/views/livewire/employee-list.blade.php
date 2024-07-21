@@ -3,17 +3,17 @@
     <table>
         <thead>
             <tr>
+                <th>所属</th>
                 <th>名前</th>
                 <th>メールアドレス</th>
-                <th>所属</th>
             </tr>
         </thead>
         <tbody>
             @foreach($employees as $employee)
             <tr>
+                <td>{{ $employee->belong_to }}</td>
                 <td>{{ $employee->name }}</td>
                 <td>{{ $employee->email }}</td>
-                <td>{{ $employee->belong_to }}</td>
             </tr>
             @endforeach
         </tbody>

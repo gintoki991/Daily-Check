@@ -45,14 +45,14 @@ return [
 
         'pdfs' => [
             'driver' => 'local',
-            'root' => storage_path('app/pdfs'),
+            'root' => storage_path('app/public/pdfs'),
             'url' => env('APP_URL') . '/storage/pdfs',
             'visibility' => 'public',
         ],
 
         'photos' => [
             'driver' => 'local',
-            'root' => storage_path('app/photos'),
+            'root' => storage_path('app/public/photos'),
             'url' => env('APP_URL') . '/storage/photos',
             'visibility' => 'public',
         ],

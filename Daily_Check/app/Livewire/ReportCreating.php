@@ -123,6 +123,6 @@ class ReportCreating extends Component
         return view('livewire.report-creating', [
             'employees' => $this->employees,
             'sites' => $this->sites,
-        ])->layout('daily-check.report-creating');
+        ])->layout('daily-check.report_creating');
     }
 }

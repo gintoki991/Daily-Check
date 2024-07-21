@@ -32,10 +32,10 @@ new class extends Component
                     <x-nav-link :href="route('home')" :active="request()->routeIs('home')" wire:navigate>
                         {{ __('ホーム') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('photoList')" :active="request()->routeIs('photo')" wire:navigate>
+                    <x-nav-link :href="route('photoListManagement')" :active="request()->routeIs('photoListManagement')" wire:navigate>
                         {{ __('写真管理') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('documentList')" :active="request()->routeIs('document')" wire:navigate>
+                    <x-nav-link :href="route('documentListManagement')" :active="request()->routeIs('documentListManagement')" wire:navigate>
                         {{ __('書類管理') }}
                     </x-nav-link>
                     <x-nav-link :href="route('employee.management')" :active="request()->routeIs('ReportCreating')" wire:navigate>
@@ -98,10 +98,10 @@ new class extends Component
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                 {{ __('ホーム') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
+            <x-responsive-nav-link :href="route('photoListManagement')" :active="request()->routeIs('photoListManagement')" wire:navigate>
                 {{ __('写真管理') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
+            <x-responsive-nav-link :href="route('documentListManagement')" :active="request()->routeIs('documentListManagement')" wire:navigate>
                 {{ __('書類管理') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('employee.management')" :active="request()->routeIs('dashboard')" wire:navigate>

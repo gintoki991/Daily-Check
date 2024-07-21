@@ -12,6 +12,10 @@ use App\Models\Test;
 
 class DailyCheckController extends Controller
 {
+    public function edit($reportId)
+    {
+        return view('daily-check.report_editing', ['reportId' => $reportId]);
+    }
     public function __construct()
     {
         $this->middleware('auth');
