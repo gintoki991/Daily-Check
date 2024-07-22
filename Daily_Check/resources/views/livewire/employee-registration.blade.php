@@ -1,4 +1,5 @@
 <div>
+    <h1>従業員を登録する</h1>
     <form wire:submit.prevent="employeeStore">
         <label for="belong_to">所属</label>
         <input id="belong_to" type="text" wire:model="belong_to"><br>

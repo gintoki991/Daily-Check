@@ -21,6 +21,7 @@
                     <th class="py-2">担当者</th>
                     <th class="py-2">実際に入った人</th>
                     <th class="py-2">コメント</th>
+                    <th class="py-2">操作</th> <!-- 編集ボタン用の新しい列 -->
                 </tr>
             </thead>
             <tbody>
@@ -35,6 +36,9 @@
                         @endforeach
                     </td>
                     <td class="py-2">{{ $report->comment }}</td>
+                    <td class="py-2">
+                        <a href="{{ route('ReportEditing', ['reportId' => $report->id]) }}" class="text-blue-500 hover:text-blue-700">編集</a>
+                    </td>
                 </tr>
                 @endforeach
             </tbody>

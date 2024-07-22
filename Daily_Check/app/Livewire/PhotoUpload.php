@@ -44,7 +44,7 @@ class PhotoUpload extends Component
         ]);
 
         Photo::create([
-            'path' => basename($path),
+            'path' => $path,
             'site_id' => $this->site_id,
             'scheduled_id' => $scheduled->id,
             'part' => $this->part,

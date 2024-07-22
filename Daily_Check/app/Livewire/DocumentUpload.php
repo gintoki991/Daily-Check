@@ -33,7 +33,7 @@ class DocumentUpload extends Component
         $this->validate();
 
         // PDFファイルを 'pdfs' ディスクに保存
-        $pdfPath = $this->pdf->store('pdfs', 'pdfs');
+        $pdfPath = $this->pdf->store('pdfs', 'public');
 
         Document::create([
             'name' => $this->name,
