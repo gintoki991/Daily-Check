@@ -13,6 +13,7 @@ class Photo extends Model
         'site_id',
         'scheduled_id',
         'part',
+        'name',
     ];
 
     // siteとのリレーション設定
