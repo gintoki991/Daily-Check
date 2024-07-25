@@ -12,6 +12,7 @@ return new class extends Migration
       $table->id();
       $table->unsignedBigInteger('site_id');
       $table->unsignedBigInteger('scheduled_id')->nullable();
+      $table->time('date');
       $table->time('start_time');
       $table->time('end_time');
       $table->unsignedBigInteger('person_in_charge')->nullable();

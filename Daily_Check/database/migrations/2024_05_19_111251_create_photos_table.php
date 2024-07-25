@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('scheduled_id')->nullable();
             $table->string('path');
             $table->string('part')->nullable();
+            $table->string('name')->nullable();
             $table->timestamps();
 
             $table->foreign('site_id')->references('id')->on('sites')->onDelete('cascade');
