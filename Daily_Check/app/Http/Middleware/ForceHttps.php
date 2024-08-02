@@ -17,11 +17,10 @@ class ForceHttps
      */
     public function handle(Request $request, Closure $next)
     {
-        if (!$request->secure()) {
+        if (!$request->secure() && env('APP_ENV') !== 'local') {
             return redirect()->secure($request->getRequestUri());
         }
 
         return $next($request);
     }
 }
-

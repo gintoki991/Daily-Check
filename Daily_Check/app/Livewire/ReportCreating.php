@@ -9,7 +9,6 @@ use Livewire\WithFileUploads;
 use App\Models\User;
 use App\Models\DailyReport;
 use App\Models\Site;
-use App\Models\Photo;
 use App\Models\Scheduled;
 use App\Models\Actual;
 use App\Models\DailyReportUser;
@@ -26,7 +25,6 @@ class ReportCreating extends Component
     public $person_in_charge;
     public $comment;
     public $selectedEmployees = [];
-    public $photos = [];
     public $part;
     public $selectedSite;
     public $scheduled_id;
@@ -77,16 +75,8 @@ class ReportCreating extends Component
                 'scheduled_id' => $this->scheduled_id,
                 'person_in_charge' => $this->person_in_charge,
                 'comment' => $this->comment,
+                'date' => $this->date,
             ]);
-
-            foreach ($this->photos as $photo) {
-                $path = $photo->store('photos', 'public');
-                $report->photos()->create([
-                    'path' => $path,
-                    'part' => $this->part,
-                    'site_id' => $this->selectedSite,
-                ]);
-            }
 
             foreach ($this->selectedEmployees as $employeeId) {
                 DailyReportUser::create([
@@ -105,7 +95,7 @@ class ReportCreating extends Component
 
             DB::commit();
             session()->flash('success', '日報が正常に提出されました。');
-            $this->reset(['date', 'start_time', 'end_time', 'person_in_charge', 'comment', 'selectedEmployees', 'photos', 'part', 'selectedSite', 'scheduled_id']);
+            $this->reset(['date', 'start_time', 'end_time', 'person_in_charge', 'comment', 'selectedEmployees', 'part', 'selectedSite', 'scheduled_id']);
         } catch (ValidationException $e) {
             DB::rollBack();
             Log::error('バリデーションエラー: ' . json_encode($e->errors()));
