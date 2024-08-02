@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\DailyCheckController;
 use App\Http\Controllers\PhotoController;
 use App\Livewire\DocumentUpload;
@@ -26,6 +27,10 @@ use App\Livewire\ScheduleRegistration;
 |
 */
 
+Route::get('logout', function () {
+    Auth::logout();
+    return redirect('/login');
+});
 
 Route::view('/', 'welcome');
 
