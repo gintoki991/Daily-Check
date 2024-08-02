@@ -58,48 +58,69 @@ class ReportEditing extends Component
         }
     }
 
-    public function update()
-{
-    DB::beginTransaction();
-    try {
-        $validated = $this->validate();
+    public function updatedDate($value)
+    {
+        // 新しい date に基づいて scheduled_id を取得
+        $newScheduled = Scheduled::where('date', $value)
+            ->where('site_id', $this->selectedSite)
+            ->first();
 
-        // 更新処理
-        $report = DailyReport::findOrFail($this->reportId);
-        $report->update([
-            'start_time' => $this->start_time,
-            'end_time' => $this->end_time,
-            'site_id' => $this->selectedSite,
-            'person_in_charge' => $this->person_in_charge,
-            'comment' => $this->comment,
-            'date' => $this->date, // 新しい日付を更新
-        ]);
-
-        // 既存のDailyReportUserを削除
-        DailyReportUser::where('daily_report_id', $report->id)->delete();
-
-        // 新しいDailyReportUserを作成
-        foreach ($this->selectedEmployees as $employeeId) {
-            DailyReportUser::create([
-                'daily_report_id' => $report->id,
-                'user_id' => $employeeId,
+        if ($newScheduled) {
+            $this->scheduled_id = $newScheduled->id;
+        } else {
+            // スケジュールが見つからない場合、新しいスケジュールを作成
+            $newScheduled = Scheduled::create([
+                'date' => $value,
                 'site_id' => $this->selectedSite,
-                'is_actual' => true,
+                // 'user_id' は指定しないため省略
             ]);
+
+            $this->scheduled_id = $newScheduled->id;
         }
-
-        DB::commit();
-
-        session()->flash('success', '日報が正常に更新されました。');
-        return redirect()->route('report-display', ['date' => $this->date, 'site_id' => $this->selectedSite]);
-    } catch (ValidationException $e) {
-        DB::rollBack();
-        session()->flash('error', 'バリデーションエラーが発生しました。');
-    } catch (\Exception $e) {
-        DB::rollBack();
-        session()->flash('error', 'データの更新に失敗しました: ' . $e->getMessage());
     }
-}
+
+    public function update()
+    {
+        DB::beginTransaction();
+        try {
+            $validated = $this->validate();
+
+            // 更新処理
+            $report = DailyReport::findOrFail($this->reportId);
+            $report->update([
+                'start_time' => $this->start_time,
+                'end_time' => $this->end_time,
+                'site_id' => $this->selectedSite,
+                'person_in_charge' => $this->person_in_charge,
+                'comment' => $this->comment,
+                'date' => $this->date, 'scheduled_id' => $this->scheduled_id,
+            ]);
+
+            // 既存のDailyReportUserを削除
+            DailyReportUser::where('daily_report_id', $report->id)->delete();
+
+            // 新しいDailyReportUserを作成
+            foreach ($this->selectedEmployees as $employeeId) {
+                DailyReportUser::create([
+                    'daily_report_id' => $report->id,
+                    'user_id' => $employeeId,
+                    'site_id' => $this->selectedSite,
+                    'is_actual' => true,
+                ]);
+            }
+
+            DB::commit();
+
+            session()->flash('success', '日報が正常に更新されました。');
+            return redirect()->route('report-display', ['date' => $this->date, 'site_id' => $this->selectedSite]);
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            session()->flash('error', 'バリデーションエラーが発生しました。');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->flash('error', 'データの更新に失敗しました: ' . $e->getMessage());
+        }
+    }
 
     public function render()
     {

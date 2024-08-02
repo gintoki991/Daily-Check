@@ -40,7 +40,7 @@ class PhotoUpload extends Component
             'date' => $this->photo_date,
             'site_id' => $this->site_id,
         ], [
-            'user_id' => auth()->id(),
+            // 'user_id' は指定しないため省略
         ]);
 
         Photo::create([

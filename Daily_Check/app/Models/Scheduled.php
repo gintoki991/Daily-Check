@@ -13,7 +13,6 @@ class Scheduled extends Model
         'date',
         'user_id',
         'site_id',
-        'photo_id',
     ];
 
      // userとのリレーション設定
@@ -27,11 +26,6 @@ class Scheduled extends Model
         return $this->belongsTo(Site::class);
     }
 
-    // photosとのリレーション設定
-    public function photos()
-    {
-        return $this->hasMany(Photo::class);
-    }
     // daily_reportsとのリレーション設定
     public function daily_reports()
     {
