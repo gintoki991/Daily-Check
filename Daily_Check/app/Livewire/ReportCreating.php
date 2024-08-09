@@ -11,8 +11,9 @@ use App\Models\DailyReport;
 use App\Models\Site;
 use App\Models\Scheduled;
 use App\Models\Actual;
-use App\Models\DailyReportUser;
+use App\Models\ScheduledUser;
 use Illuminate\Validation\ValidationException;
+use Carbon\Carbon;
 
 class ReportCreating extends Component
 {
@@ -55,14 +56,17 @@ class ReportCreating extends Component
             $validated = $this->validate();
             Log::info('バリデーション成功: ', $validated);
 
-            // Scheduledテーブルにデータを保存
+            // 日付を正しい形式に変換
+            $formattedDate = Carbon::parse($this->date)->format('Y-m-d');
+
+            // Scheduledテーブルにデータを保存または取得
             $scheduled = Scheduled::firstOrCreate(
                 [
-                    'date' => $this->date,
-                    'site_id' => $this->selectedSite
+                    'date' => $formattedDate,
+                    'site_id' => $this->selectedSite,
                 ],
                 [
-                    'user_id' => $this->person_in_charge
+                    'user_id' => $this->person_in_charge,
                 ]
             );
             $this->scheduled_id = $scheduled->id;
@@ -75,17 +79,20 @@ class ReportCreating extends Component
                 'scheduled_id' => $this->scheduled_id,
                 'person_in_charge' => $this->person_in_charge,
                 'comment' => $this->comment,
-                'date' => $this->date,
+                'date' => $formattedDate, // フォーマットされた日付を保存
             ]);
 
+            // selectedEmployeesの処理
             foreach ($this->selectedEmployees as $employeeId) {
-                DailyReportUser::create([
-                    'daily_report_id' => $report->id,
+                // ScheduledUserエントリを作成
+                ScheduledUser::create([
+                    'scheduled_id' => $this->scheduled_id,
                     'user_id' => $employeeId,
                     'site_id' => $this->selectedSite,
-                    'is_actual' => true, // 修正部分
+                    'is_actual' => true,
                 ]);
 
+                // Actualテーブルにデータを保存
                 Actual::create([
                     'scheduled_id' => $this->scheduled_id,
                     'user_id' => $employeeId,

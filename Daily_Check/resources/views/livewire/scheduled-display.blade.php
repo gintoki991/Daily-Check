@@ -13,7 +13,7 @@
 
     <div class="mt-4">
         <h1>入る予定の人</h1>
-        @if(!empty($scheduledUsers))
+        @if(!empty($scheduledUsers) && $scheduledUsers->isNotEmpty())
         <ul>
             @foreach($scheduledUsers as $user)
             <li>{{ $user->name }}</li>

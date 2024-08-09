@@ -8,7 +8,7 @@ use App\Models\User;
 use App\Models\DailyReport;
 use App\Models\Site;
 use App\Models\Scheduled;
-use App\Models\DailyReportUser;
+use App\Models\ScheduledUser;
 use Illuminate\Validation\ValidationException;
 
 class ReportEditing extends Component
@@ -93,19 +93,23 @@ class ReportEditing extends Component
                 'site_id' => $this->selectedSite,
                 'person_in_charge' => $this->person_in_charge,
                 'comment' => $this->comment,
-                'date' => $this->date, 'scheduled_id' => $this->scheduled_id,
+                'date' => $this->date,
+                'scheduled_id' => $this->scheduled_id,
             ]);
 
-            // 既存のDailyReportUserを削除
-            DailyReportUser::where('daily_report_id', $report->id)->delete();
+            // 既存のScheduledUserを削除
+            ScheduledUser::where('scheduled_id', $this->scheduled_id)
+                ->where('is_actual', true)
+                ->delete();
 
-            // 新しいDailyReportUserを作成
+            // 新しいScheduledUserを作成
             foreach ($this->selectedEmployees as $employeeId) {
-                DailyReportUser::create([
-                    'daily_report_id' => $report->id,
+                ScheduledUser::create([
+                    'scheduled_id' => $this->scheduled_id,
                     'user_id' => $employeeId,
                     'site_id' => $this->selectedSite,
                     'is_actual' => true,
+                    'is_scheduled' => true, 
                 ]);
             }
 

@@ -3,7 +3,7 @@
 namespace App\Livewire;
 
 use Livewire\Component;
-use App\Models\Scheduled;
+use App\Models\ScheduledUser;
 use App\Models\Site;
 use Carbon\Carbon;
 
@@ -36,8 +36,11 @@ class ScheduledDisplay extends Component
     public function loadScheduledUsers()
     {
         if ($this->selectedDate && $this->selectedSite) {
-            $this->scheduledUsers = Scheduled::where('date', $this->selectedDate)
-                ->where('site_id', $this->selectedSite)
+            $this->scheduledUsers = ScheduledUser::where('site_id', $this->selectedSite)
+                ->where('is_scheduled', 1)
+                ->whereHas('scheduled', function ($query) {
+                    $query->where('date', $this->selectedDate);
+                })
                 ->with('user')
                 ->get()
                 ->pluck('user');

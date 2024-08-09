@@ -37,10 +37,8 @@ class ReportDisplay extends Component
     public function loadReports()
     {
         if ($this->selectedDate && $this->selectedSite) {
-            $this->reports = DailyReport::whereHas('scheduled', function ($query) {
-                $query->where('date', $this->selectedDate)
-                    ->where('site_id', $this->selectedSite);
-            })
+            $this->reports = DailyReport::where('date', $this->selectedDate)
+                ->where('site_id', $this->selectedSite)
                 ->with(['personInCharge', 'actualUsers'])
                 ->get();
         } else {

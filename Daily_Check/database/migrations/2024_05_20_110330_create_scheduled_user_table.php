@@ -11,20 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('daily_report_user', function (Blueprint $table) {
+        Schema::create('scheduled_user', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('daily_report_id');
+            $table->unsignedBigInteger('scheduled_id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('site_id');
             $table->boolean('is_scheduled')->default(false);
             $table->boolean('is_actual')->default(false);
             $table->timestamps();
 
-            $table->foreign('daily_report_id')->references('id')->on('daily_reports')->onDelete('cascade');
+            $table->foreign('scheduled_id')->references('id')->on('scheduleds')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('site_id')->references('id')->on('sites')->onDelete('cascade');
 
-            $table->unique(['daily_report_id', 'user_id']);
+            $table->unique(['scheduled_id', 'user_id']);
         });
     }
 
@@ -33,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('daily_report_user');
+        Schema::dropIfExists('scheduled_user');
     }
 };
