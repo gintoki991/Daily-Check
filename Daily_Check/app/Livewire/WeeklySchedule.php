@@ -3,7 +3,7 @@
 namespace App\Livewire;
 
 use Livewire\Component;
-use App\Models\Scheduled;
+use App\Models\ScheduledUser;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -22,11 +22,19 @@ class WeeklySchedule extends Component
         $startOfWeek = Carbon::now()->startOfWeek();
         $endOfWeek = $startOfWeek->copy()->endOfWeek();
 
-        $scheduled = Scheduled::where('user_id', $userId)
-            ->whereBetween('date', [$startOfWeek, $endOfWeek])
-            ->with('site')
+        // ScheduledUserテーブルを使用してスケジュールを取得
+        $scheduled = ScheduledUser::where('user_id', $userId)
+            ->whereHas('roles', function ($query) {
+                $query->where('is_scheduled', 1);
+            })
+            ->whereHas('scheduled', function ($query) use ($startOfWeek, $endOfWeek) {
+                $query->whereBetween('date', [$startOfWeek, $endOfWeek]);
+            })
+            ->with('site', 'scheduled')
             ->get()
-            ->groupBy('date');
+            ->groupBy(function ($item) {
+                return $item->scheduled->date;
+            });
 
         $this->weeklySchedule = [];
 

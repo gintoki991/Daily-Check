@@ -16,7 +16,6 @@ class DailyReport extends Model
         'person_in_charge',
         'scheduled_id',
         'site_id',
-        'date',
     ];
 
     // usersとのリレーション設定（中間テーブル使用）

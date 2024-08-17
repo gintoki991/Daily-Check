@@ -14,12 +14,7 @@ return new class extends Migration
         Schema::create('scheduleds', function (Blueprint $table) {
             $table->id();
             $table->date('date');
-            // $table->unsignedBigInteger('user_id')->nullable();
-            // $table->unsignedBigInteger('site_id');
             $table->timestamps();
-
-            // $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
-            // $table->foreign('site_id')->references('id')->on('sites')->onDelete('cascade');
         });
     }
 

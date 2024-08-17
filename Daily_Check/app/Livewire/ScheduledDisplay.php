@@ -37,7 +37,9 @@ class ScheduledDisplay extends Component
     {
         if ($this->selectedDate && $this->selectedSite) {
             $this->scheduledUsers = ScheduledUser::where('site_id', $this->selectedSite)
-                ->where('is_scheduled', 1)
+                ->whereHas('roles', function ($query) {
+                    $query->where('is_scheduled', 1);
+                })
                 ->whereHas('scheduled', function ($query) {
                     $query->where('date', $this->selectedDate);
                 })

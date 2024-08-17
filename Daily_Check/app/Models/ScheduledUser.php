@@ -14,8 +14,6 @@ class ScheduledUser extends Pivot
     protected $fillable = [
         'scheduled_id',
         'user_id',
-        'is_scheduled',
-        'is_actual',
         'site_id',
     ];
 
@@ -35,5 +33,11 @@ class ScheduledUser extends Pivot
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    // ScheduledUserRolesとのリレーション設定
+    public function roles()
+    {
+        return $this->hasMany(ScheduledUserRole::class, 'scheduled_user_id');
     }
 }

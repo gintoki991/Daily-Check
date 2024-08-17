@@ -5,7 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\DailyReport;
 use App\Models\Site;
-use App\Models\Scheduled;
+use App\Models\ScheduledUser;
 use Carbon\Carbon;
 
 class ReportDisplay extends Component
@@ -37,8 +37,10 @@ class ReportDisplay extends Component
     public function loadReports()
     {
         if ($this->selectedDate && $this->selectedSite) {
-            $this->reports = DailyReport::where('date', $this->selectedDate)
-                ->where('site_id', $this->selectedSite)
+            $this->reports = DailyReport::where('site_id', $this->selectedSite)
+                ->whereHas('scheduled', function ($query) {
+                    $query->where('date', $this->selectedDate);
+                })
                 ->with(['personInCharge', 'actualUsers'])
                 ->get();
         } else {

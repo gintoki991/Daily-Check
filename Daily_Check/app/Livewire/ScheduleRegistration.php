@@ -7,6 +7,8 @@ use App\Models\Site;
 use App\Models\User;
 use App\Models\Scheduled;
 use App\Models\ScheduledUser;
+use App\Models\ScheduledUserRole;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
 
 class ScheduleRegistration extends Component
@@ -16,42 +18,20 @@ class ScheduleRegistration extends Component
     public $selectedDate;
     public $selectedSite;
     public $selectedEmployees = [];
+    public $duplicateEntries = [];
 
-    protected $updatesQueryString = ['selectedSite', 'selectedDate'];
+    protected $listeners = ['selectDate'];
 
     public function mount()
     {
         $this->sites = Site::all();
         $this->employees = User::all();
-        $this->selectedDate = request()->query('selectedDate', now()->format('Y-m-d'));
-        $this->selectedSite = request()->query('selectedSite', $this->selectedSite);
-
-        $this->checkExistingSchedules();
+        $this->selectedDate = now()->format('Y-m-d');
     }
 
-    public function updated($propertyName)
+    public function selectDate($date)
     {
-        // 現場または日付が更新されたときに、既存のスケジュールをチェック
-        if (in_array($propertyName, ['selectedSite', 'selectedDate'])) {
-            $this->checkExistingSchedules();
-        }
-    }
-
-    // 既存のスケジュールを確認し、該当する従業員を自動で選択
-    public function checkExistingSchedules()
-    {
-        if ($this->selectedDate && $this->selectedSite) {
-            $existingScheduled = Scheduled::where('date', $this->selectedDate)
-                ->where('site_id', $this->selectedSite)
-                ->first();
-
-            if ($existingScheduled) {
-                $this->selectedEmployees = ScheduledUser::where('scheduled_id', $existingScheduled->id)
-                    ->where('is_scheduled', true)
-                    ->pluck('user_id')
-                    ->toArray();
-            }
-        }
+        $this->selectedDate = $date;
     }
 
     public function submit()
@@ -66,37 +46,69 @@ class ScheduleRegistration extends Component
         DB::beginTransaction();
 
         try {
-            // `scheduleds` テーブルにデータを保存
-            $scheduled = Scheduled::updateOrCreate(
-                [
-                    'date' => $this->selectedDate,
-                    'site_id' => $this->selectedSite,
-                ],
-                []
-            );
+            $this->duplicateEntries = []; // 重複エントリのリセット
 
-            // `scheduled_user` テーブルに is_scheduled を保存
+            // 日付に基づいてScheduledエントリを取得または作成
+            $scheduled = Scheduled::firstOrCreate(['date' => $this->selectedDate]);
+
+            // 選択された従業員ごとにScheduledUserエントリを作成
             foreach ($this->selectedEmployees as $employeeId) {
-                ScheduledUser::updateOrCreate(
-                    [
+                // 重複するエントリがないか確認
+                $existingEntry = ScheduledUser::where('scheduled_id', $scheduled->id)
+                    ->where('user_id', $employeeId)
+                    ->where('site_id', $this->selectedSite)
+                    ->first();
+
+                if ($existingEntry) {
+                    // 重複する場合、エラーメッセージ用に保持
+                    $this->duplicateEntries[] = User::find($employeeId)->name;
+                } else {
+                    // ScheduledUserエントリを作成し、その結果を変数に代入
+                    $scheduledUser = ScheduledUser::create([
                         'scheduled_id' => $scheduled->id,
                         'user_id' => $employeeId,
                         'site_id' => $this->selectedSite,
-                    ],
-                    [
-                        'is_scheduled' => true,
-                    ]
-                );
+                    ]);
+
+                    // $scheduledUserが作成され、IDが正しく取得できているか確認
+                    if ($scheduledUser && $scheduledUser->id) {
+                        // ScheduledUserRoleエントリを作成
+                        ScheduledUserRole::create([
+                            'scheduled_user_id' => $scheduledUser->id,
+                            'is_scheduled' => true,
+                            'is_actual' => false,
+                        ]);
+                    } else {
+                        // エラー処理: ScheduledUserが作成されなかった場合
+                        \Log::error('ScheduledUser could not be created:', [
+                            'scheduled_id' => $scheduled->id,
+                            'user_id' => $employeeId,
+                            'site_id' => $this->selectedSite,
+                        ]);
+                        throw new \Exception('ScheduledUser could not be created.');
+                    }
+                }
+            }
+
+            if (!empty($this->duplicateEntries)) {
+                session()->flash('error', '以下のユーザーはすでに登録されています: ' . implode(', ', $this->duplicateEntries));
+            } else {
+                session()->flash('message', '登録が成功しました！');
             }
 
             DB::commit();
-            session()->flash('message', '登録が成功しました！');
-            $this->dispatch('refreshComponent'); // コンポーネントのリフレッシュ
-
+        } catch (ValidationException $e) {
+            DB::rollBack();
+            session()->flash('error', 'バリデーションエラーが発生しました。');
         } catch (\Exception $e) {
             DB::rollBack();
+            \Log::error('Failed to save data:', [
+                'error' => $e->getMessage(),
+                'scheduled_id' => $scheduled->id,
+                'user_id' => $employeeId,
+                'site_id' => $this->selectedSite,
+            ]);
             session()->flash('error', 'データの保存に失敗しました: ' . $e->getMessage());
-            $this->dispatch('refreshComponent'); // コンポーネントのリフレッシュ
         }
     }
 

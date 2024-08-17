@@ -16,15 +16,13 @@ return new class extends Migration
             $table->unsignedBigInteger('scheduled_id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('site_id');
-            $table->boolean('is_scheduled')->default(false);
-            $table->boolean('is_actual')->default(false);
             $table->timestamps();
 
             $table->foreign('scheduled_id')->references('id')->on('scheduleds')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('site_id')->references('id')->on('sites')->onDelete('cascade');
 
-            $table->unique(['scheduled_id', 'user_id']);
+            $table->unique(['scheduled_id', 'user_id', 'site_id']);
         });
     }
 

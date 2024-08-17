@@ -9,6 +9,7 @@ use App\Models\DailyReport;
 use App\Models\Site;
 use App\Models\Scheduled;
 use App\Models\ScheduledUser;
+use App\Models\ScheduledUserRole;
 use Illuminate\Validation\ValidationException;
 
 class ReportEditing extends Component
@@ -48,7 +49,7 @@ class ReportEditing extends Component
             $this->start_time = $report->start_time;
             $this->end_time = $report->end_time;
             $this->selectedSite = $report->site_id;
-            $this->date = $report->date; // 日付を個別に読み込み
+            $this->date = $report->scheduled->date; // `Scheduled`から日付を取得
             $this->person_in_charge = $report->person_in_charge;
             $this->comment = $report->comment;
             $this->selectedEmployees = $report->actualUsers->pluck('id')->toArray();
@@ -93,23 +94,27 @@ class ReportEditing extends Component
                 'site_id' => $this->selectedSite,
                 'person_in_charge' => $this->person_in_charge,
                 'comment' => $this->comment,
-                'date' => $this->date,
                 'scheduled_id' => $this->scheduled_id,
             ]);
 
-            // 既存のScheduledUserを削除
-            ScheduledUser::where('scheduled_id', $this->scheduled_id)
-                ->where('is_actual', true)
-                ->delete();
+            // 既存のScheduledUserRoleを削除
+            ScheduledUserRole::whereHas('scheduledUser', function ($query) {
+                $query->where('scheduled_id', $this->scheduled_id)
+                    ->where('is_actual', true);
+            })->delete();
 
-            // 新しいScheduledUserを作成
+            // 新しいScheduledUserRoleを作成
             foreach ($this->selectedEmployees as $employeeId) {
-                ScheduledUser::create([
+                $scheduledUser = ScheduledUser::firstOrCreate([
                     'scheduled_id' => $this->scheduled_id,
                     'user_id' => $employeeId,
                     'site_id' => $this->selectedSite,
+                ]);
+
+                ScheduledUserRole::create([
+                    'scheduled_user_id' => $scheduledUser->id,
                     'is_actual' => true,
-                    'is_scheduled' => true, 
+                    'is_scheduled' => false,
                 ]);
             }
 

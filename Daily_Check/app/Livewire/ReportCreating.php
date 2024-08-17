@@ -12,6 +12,7 @@ use App\Models\Site;
 use App\Models\Scheduled;
 use App\Models\Actual;
 use App\Models\ScheduledUser;
+use App\Models\ScheduledUserRole;
 use Illuminate\Validation\ValidationException;
 use Carbon\Carbon;
 
@@ -29,6 +30,7 @@ class ReportCreating extends Component
     public $part;
     public $selectedSite;
     public $scheduled_id;
+    public $scheduledUser_id;
     public $employees;
 
     protected $rules = [
@@ -60,16 +62,10 @@ class ReportCreating extends Component
             $formattedDate = Carbon::parse($this->date)->format('Y-m-d');
 
             // Scheduledテーブルにデータを保存または取得
-            $scheduled = Scheduled::firstOrCreate(
-                [
-                    'date' => $formattedDate,
-                    'site_id' => $this->selectedSite,
-                ],
-                [
-                    'user_id' => $this->person_in_charge,
-                ]
-            );
+            $scheduled = Scheduled::firstOrCreate(['date' => $formattedDate]);
             $this->scheduled_id = $scheduled->id;
+
+            Log::info('Scheduled ID: ', ['scheduled_id' => $this->scheduled_id]);
 
             // DailyReportテーブルにデータを保存
             $report = DailyReport::create([
@@ -79,26 +75,47 @@ class ReportCreating extends Component
                 'scheduled_id' => $this->scheduled_id,
                 'person_in_charge' => $this->person_in_charge,
                 'comment' => $this->comment,
-                'date' => $formattedDate, // フォーマットされた日付を保存
             ]);
 
-            // selectedEmployeesの処理
-            foreach ($this->selectedEmployees as $employeeId) {
-                // ScheduledUserエントリを作成
-                ScheduledUser::create([
-                    'scheduled_id' => $this->scheduled_id,
-                    'user_id' => $employeeId,
-                    'site_id' => $this->selectedSite,
-                    'is_actual' => true,
-                ]);
+            Log::info('DailyReport created: ', $report->toArray());
 
-                // Actualテーブルにデータを保存
-                Actual::create([
-                    'scheduled_id' => $this->scheduled_id,
-                    'user_id' => $employeeId,
-                    'site_id' => $this->selectedSite,
-                ]);
-            }
+            // selectedEmployeesの処理
+            DB::enableQueryLog(); // SQLクエリのログ出力を有効化
+            // クエリが実行された後にログを取得
+            $queries = DB::getQueryLog();
+            Log::info('SQL Query Log:', ['queries' => $queries]);
+
+            foreach ($this->selectedEmployees as $employeeId) {
+                try {
+                    Log::info("Checking for existing ScheduledUser for employeeId: $employeeId");
+
+                    $scheduledUser = ScheduledUser::firstOrCreate(
+                        [
+                            'scheduled_id' => $this->scheduled_id,
+                            'user_id' => $employeeId,
+                            'site_id' => $this->selectedSite,
+                        ]
+                    );
+
+                    $this->scheduledUser_id = $scheduledUser->id;
+
+                    if ($this->scheduledUser_id === null) {
+                        throw new \Exception('ScheduledUser ID is null after creation.');
+                    }
+
+                    Log::info('ScheduledUser ID: ', ['scheduledUser_id' => $this->scheduledUser_id]);
+
+                    // 3. ScheduledUserRoleの作成（IDの取得と使用）
+                    Log::info('Creating ScheduledUserRole for ScheduledUser ID:', ['scheduled_user_id' => $scheduledUser->id]);
+                    ScheduledUserRole::create([
+                        'scheduled_user_id' => $scheduledUser->id,
+                        'is_actual' => true,
+                        'is_scheduled' => false,
+                    ]);
+                } catch (\Exception $e) {
+                    Log::error('Error processing employeeId: ' . $employeeId, ['error' => $e->getMessage()]);
+                }
+        }
 
             DB::commit();
             session()->flash('success', '日報が正常に提出されました。');
