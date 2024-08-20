@@ -31,9 +31,15 @@
                     <td class="py-2">{{ $report->end_time }}</td>
                     <td class="py-2">{{ $report->personInCharge->name }}</td>
                     <td class="py-2">
-                        @foreach($report->actualUsers as $user)
-                        {{ $user->name }}<br>
+                        @if($report->roles->isNotEmpty())
+                        @foreach($report->roles as $role)
+                        @if($role->scheduledUser->scheduled_id == $report->scheduled_id) <!-- リレーションを確認 -->
+                        {{ $role->scheduledUser->user->name }}<br>
+                        @endif
                         @endforeach
+                        @else
+                        <span>データなし</span>
+                        @endif
                     </td>
                     <td class="py-2">{{ $report->comment }}</td>
                     <td class="py-2">

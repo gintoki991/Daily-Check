@@ -38,7 +38,6 @@ class PhotoUpload extends Component
         // 日付に対応するScheduledレコードを取得または作成
         $scheduled = Scheduled::firstOrCreate([
             'date' => $this->photo_date,
-            'site_id' => $this->site_id,
         ], [
             // 'user_id' は指定しないため省略
         ]);

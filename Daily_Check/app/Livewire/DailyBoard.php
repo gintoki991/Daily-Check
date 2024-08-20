@@ -30,13 +30,13 @@ class DailyBoard extends Component
 
         // 現在の日付でログインユーザーが入る予定の現場を取得
         $scheduledUser = ScheduledUser::where('user_id', $userId)
-        ->whereHas('roles', function ($query) { // 'roles' リレーションを利用
-            $query->where('is_scheduled', 1);
-        })
-        ->whereHas('scheduled', function ($query) use ($today) {
-            $query->where('date', $today);
-        })
-        ->with(['site', 'scheduled'])
+            ->whereHas('roles', function ($query) { // 'roles' リレーションを利用
+                $query->where('is_scheduled', 1);
+            })
+            ->whereHas('scheduled', function ($query) use ($today) {
+                $query->where('date', $today);
+            })
+            ->with(['site', 'scheduled'])
             ->first();
 
         if ($scheduledUser) {
@@ -48,21 +48,28 @@ class DailyBoard extends Component
                 ->whereHas('scheduled', function ($query) use ($oneWeekAgo, $today) {
                     $query->whereBetween('date', [$oneWeekAgo, $today]);
                 })
-                ->pluck('comment')
+                ->with('scheduled') // ここでリレーションを読み込む
+                ->get()
+                ->map(function ($report) {
+                    return [
+                        'date' => $report->scheduled ? Carbon::parse($report->scheduled->date)->format('Y年m月d日') : '日付不明',
+                        'comment' => $report->comment,
+                    ];
+                })
                 ->toArray();
 
             // 同じ現場に入る予定の他のユーザーを取得
             $this->scheduledUsers = ScheduledUser::where('site_id', $scheduledUser->site->id)
-            ->whereHas('roles', function ($query) {
-                $query->where('is_scheduled', 1);
-            })
-            ->whereHas('scheduled', function ($query) use ($today) {
-                $query->where('date', $today);
-            })
-            ->where('user_id', '!=', $userId)
-            ->with('user')
-            ->get()
-            ->pluck('user.name')
+                ->whereHas('roles', function ($query) {
+                    $query->where('is_scheduled', 1);
+                })
+                ->whereHas('scheduled', function ($query) use ($today) {
+                    $query->where('date', $today);
+                })
+                ->where('user_id', '!=', $userId)
+                ->with('user')
+                ->get()
+                ->pluck('user.name')
                 ->toArray();
         } else {
             $this->currentSiteName = '未定';

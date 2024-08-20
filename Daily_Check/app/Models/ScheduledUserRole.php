@@ -7,16 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class ScheduledUserRole extends Model
 {
-use HasFactory;
+  use HasFactory;
 
-protected $fillable = [
-'scheduled_user_id',
-'is_scheduled',
-'is_actual',
-];
+  protected $fillable = [
+    'scheduled_user_id',
+    'is_scheduled',
+    'is_actual',
+  ];
 
-public function scheduledUser()
-{
-return $this->belongsTo(ScheduledUser::class, 'scheduled_user_id');
-}
+  public function scheduledUser()
+  {
+    return $this->belongsTo(ScheduledUser::class, 'scheduled_user_id');
+  }
 }

@@ -45,9 +45,14 @@ class DailyReport extends Model
     }
 
     // 実際に参加したユーザーとのリレーション設定
-    public function actualUsers()
+    public function scheduledUser()
     {
-        return $this->belongsToMany(User::class, 'scheduled_user', 'scheduled_id', 'user_id')
-            ->wherePivot('is_actual', true);
+        return $this->hasOne(ScheduledUser::class, 'scheduled_id', 'scheduled_id');
     }
+
+    public function roles()
+    {
+        return $this->hasManyThrough(ScheduledUserRole::class, ScheduledUser::class, 'scheduled_id', 'scheduled_user_id', 'scheduled_id', 'id');
+    }
+
 }

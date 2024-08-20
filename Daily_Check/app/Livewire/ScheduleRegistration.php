@@ -3,13 +3,14 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Models\Site;
 use App\Models\User;
 use App\Models\Scheduled;
 use App\Models\ScheduledUser;
 use App\Models\ScheduledUserRole;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Facades\DB;
 
 class ScheduleRegistration extends Component
 {
@@ -19,8 +20,14 @@ class ScheduleRegistration extends Component
     public $selectedSite;
     public $selectedEmployees = [];
     public $duplicateEntries = [];
+    public $scheduled_id;
 
-    protected $listeners = ['selectDate'];
+    protected $rules = [
+        'selectedDate' => 'required|date',
+        'selectedSite' => 'required|exists:sites,id',
+        'selectedEmployees' => 'required|array',
+        'selectedEmployees.*' => 'exists:users,id',
+    ];
 
     public function mount()
     {
@@ -36,80 +43,118 @@ class ScheduleRegistration extends Component
 
     public function submit()
     {
-        $this->validate([
-            'selectedDate' => 'required|date',
-            'selectedSite' => 'required|exists:sites,id',
-            'selectedEmployees' => 'required|array',
-            'selectedEmployees.*' => 'exists:users,id',
-        ]);
-
         DB::beginTransaction();
-
         try {
-            $this->duplicateEntries = []; // 重複エントリのリセット
+            Log::info('バリデーション開始');
+            $validated = $this->validate();
+            Log::info('バリデーション成功: ', $validated);
 
             // 日付に基づいてScheduledエントリを取得または作成
             $scheduled = Scheduled::firstOrCreate(['date' => $this->selectedDate]);
+            $this->scheduled_id = $scheduled->id;
 
-            // 選択された従業員ごとにScheduledUserエントリを作成
-            foreach ($this->selectedEmployees as $employeeId) {
-                // 重複するエントリがないか確認
-                $existingEntry = ScheduledUser::where('scheduled_id', $scheduled->id)
-                    ->where('user_id', $employeeId)
-                    ->where('site_id', $this->selectedSite)
-                    ->first();
+            Log::info('Scheduled ID: ', ['scheduled_id' => $this->scheduled_id]);
 
-                if ($existingEntry) {
-                    // 重複する場合、エラーメッセージ用に保持
-                    $this->duplicateEntries[] = User::find($employeeId)->name;
-                } else {
-                    // ScheduledUserエントリを作成し、その結果を変数に代入
-                    $scheduledUser = ScheduledUser::create([
-                        'scheduled_id' => $scheduled->id,
-                        'user_id' => $employeeId,
-                        'site_id' => $this->selectedSite,
-                    ]);
+            // 1. 全ての ScheduledUser をトランザクション内で作成
+            $this->createAllScheduledUsers();
 
-                    // $scheduledUserが作成され、IDが正しく取得できているか確認
-                    if ($scheduledUser && $scheduledUser->id) {
-                        // ScheduledUserRoleエントリを作成
-                        ScheduledUserRole::create([
-                            'scheduled_user_id' => $scheduledUser->id,
-                            'is_scheduled' => true,
-                            'is_actual' => false,
-                        ]);
-                    } else {
-                        // エラー処理: ScheduledUserが作成されなかった場合
-                        \Log::error('ScheduledUser could not be created:', [
-                            'scheduled_id' => $scheduled->id,
-                            'user_id' => $employeeId,
-                            'site_id' => $this->selectedSite,
-                        ]);
-                        throw new \Exception('ScheduledUser could not be created.');
-                    }
-                }
-            }
+            DB::commit();
+
+            // 2. トランザクション外で ScheduledUserRole を一度に作成
+            $this->createAllScheduledUserRoles();
 
             if (!empty($this->duplicateEntries)) {
                 session()->flash('error', '以下のユーザーはすでに登録されています: ' . implode(', ', $this->duplicateEntries));
             } else {
                 session()->flash('message', '登録が成功しました！');
             }
-
-            DB::commit();
         } catch (ValidationException $e) {
             DB::rollBack();
+            Log::error('バリデーションエラー: ' . json_encode($e->errors()));
             session()->flash('error', 'バリデーションエラーが発生しました。');
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::error('Failed to save data:', [
-                'error' => $e->getMessage(),
-                'scheduled_id' => $scheduled->id,
-                'user_id' => $employeeId,
-                'site_id' => $this->selectedSite,
-            ]);
+            Log::error('データの保存に失敗しました: ' . $e->getMessage());
             session()->flash('error', 'データの保存に失敗しました: ' . $e->getMessage());
         }
+    }
+
+    protected function createAllScheduledUsers()
+    {
+        foreach ($this->selectedEmployees as $employeeId) {
+            try {
+                Log::info("Creating ScheduledUser for employeeId: $employeeId");
+
+                // 変数が適切に設定されているか確認
+                if (is_null($this->scheduled_id) || is_null($employeeId) || is_null($this->selectedSite)) {
+                    throw new \Exception('ScheduledUser creation failed due to null value(s).');
+                }
+                Log::info('ScheduledUser creation parameters:', [
+                    'scheduled_id' => $this->scheduled_id,
+                    'user_id' => $employeeId,
+                    'site_id' => $this->selectedSite,
+                ]);
+
+                // まずはScheduledUserを作成
+                $scheduledUser = ScheduledUser::firstOrCreate([
+                    'scheduled_id' => $this->scheduled_id,
+                    'user_id' => $employeeId,
+                    'site_id' => $this->selectedSite,
+                ]);
+
+                $scheduledUser->refresh(); // データベースから最新の情報を取得
+                $this->scheduledUser_id = $scheduledUser->id;
+
+                if ($this->scheduledUser_id === null) {
+                    throw new \Exception('ScheduledUser ID is null after creation.');
+                }
+
+                Log::info('ScheduledUser ID created: ', ['scheduledUser_id' => $this->scheduledUser_id]);
+
+                // `ScheduledUserRole`に`is_scheduled`が`1`のレコードがあるか確認
+                $existingRole = ScheduledUserRole::where('scheduled_user_id', $scheduledUser->id)
+                    ->where('is_scheduled', true)
+                    ->first();
+
+                if ($existingRole) {
+                    // 既に`is_scheduled`が`1`のレコードが存在する場合は、重複として処理
+                    $this->duplicateEntries[] = User::find($employeeId)->name;
+                }
+            } catch (\Exception $e) {
+                Log::error('Error creating ScheduledUser for employeeId: ' . $employeeId, ['error' => $e->getMessage()]);
+            }
+        }
+    }
+
+    protected function createAllScheduledUserRoles()
+    {
+        foreach ($this->selectedEmployees as $employeeId) {
+            try {
+                $scheduledUser = ScheduledUser::where('scheduled_id', $this->scheduled_id)
+                    ->where('user_id', $employeeId)
+                    ->where('site_id', $this->selectedSite)
+                    ->first();
+
+                if ($scheduledUser) {
+                    Log::info('Creating ScheduledUserRole for ScheduledUser ID:', ['scheduled_user_id' => $scheduledUser->id]);
+                    $this->createScheduledUserRole($scheduledUser);
+                } else {
+                    throw new \Exception('ScheduledUser not found after creation.');
+                }
+            } catch (\Exception $e) {
+                Log::error('Error creating ScheduledUserRole for employeeId: ' . $employeeId, ['error' => $e->getMessage()]);
+            }
+        }
+    }
+
+    //ScheduledUserRoleにデータを保存
+    protected function createScheduledUserRole($scheduledUser)
+    {
+        ScheduledUserRole::create([
+            'scheduled_user_id' => $scheduledUser->id,
+            'is_actual' => false,
+            'is_scheduled' => true,
+        ]);
     }
 
     public function render()
