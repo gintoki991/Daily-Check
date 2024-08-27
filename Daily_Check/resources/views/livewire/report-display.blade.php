@@ -52,7 +52,7 @@
             </tbody>
         </table>
         @else
-        <p class="text-center">該当する日報がありません。</p>
+        <p class="text-white text-center">該当する日報がありません。</p>
         @endif
     </div>
 </div>

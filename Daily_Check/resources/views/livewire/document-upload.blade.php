@@ -36,9 +36,9 @@
     </div>
 
     <!-- 保存ボタン -->
-    <div class="col-span-6">
-      <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">
-        保存
+    <div class="col-span-6 flex justify-center mt-4">
+      <button type="submit" class="w-2/3 py-2 px-8 inline-flex justify-center items-center gap-x-2 font-semibold text-lg font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none cursor-pointer">
+        保 存
       </button>
     </div>
   </form>

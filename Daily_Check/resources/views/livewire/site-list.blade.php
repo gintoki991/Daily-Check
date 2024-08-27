@@ -23,12 +23,26 @@
                 </td>
                 <td class="border border-slate-300 px-4 py-2">
                     @if($editingSite && $editingSite->id === $site->id)
-                    <button wire:click="save" class="text-green-500">保存</button>
-                    <button wire:click="cancelEdit" class="text-blue-500">キャンセル</button>
+                    <!-- 保存ボタン -->
+                    <button wire:click="save" type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-teal-500 text-white hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 cursor-pointer">
+                        保存
+                    </button>
+
+                    <!-- キャンセルボタン -->
+                    <button wire:click="cancelEdit" type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 cursor-pointer">
+                        キャンセル
+                    </button>
                     @else
-                    <button wire:click="edit({{ $site->id }})" class="text-blue-500">編集</button>
+                    <!-- 編集ボタン（濃いグレー） -->
+                    <button wire:click="edit({{ $site->id }})" type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-gray-900 text-gray-500 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 cursor-pointer">
+                        編集
+                    </button>
                     @endif
-                    <button onclick="confirmDelete({{ $site->id }})" class="text-red-500">削除</button>
+
+                    <!-- 削除ボタン（赤） -->
+                    <button wire:click="confirmDelete({{ $site->id }})" type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-red-600 text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 cursor-pointer">
+                        削除
+                    </button>
                 </td>
             </tr>
             @endforeach
@@ -43,31 +57,28 @@
             <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div class="sm:flex sm:items-start">
                     <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                        <h3 class="text-lg leading-6 font-medium text-center text-gray-900" id="modal-title">
                             削除確認
                         </h3>
                         <div class="mt-2">
                             <p class="text-sm text-gray-500">
-                                本当にこの現場を削除しますか？
+                                本当に削除しますか？
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                <button type="button" wire:click="delete" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm">
+                <!-- 「はい」ボタン（赤） -->
+                <button type="button" wire:click="delete" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-red-600 text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm cursor-pointer">
                     はい
                 </button>
-                <button type="button" wire:click="cancelDelete" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm">
+
+                <!-- 「いいえ」ボタン（緑） -->
+                <button type="button" wire:click="cancelDelete" class="py-2 px-3 mt-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-green-500 text-white hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:w-auto sm:text-sm cursor-pointer">
                     いいえ
                 </button>
             </div>
         </div>
     </div>
-
-    <script>
-        function confirmDelete(id) {
-            @this.confirmDelete(id);
-        }
-    </script>
 </div>

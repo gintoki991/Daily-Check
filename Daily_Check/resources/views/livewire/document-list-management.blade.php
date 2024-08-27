@@ -1,6 +1,6 @@
 <div>
     <div class="mb-4 mt-4">
-        <label for="siteSelect" class="block text-gray-700 text-sm font-bold mb-2">現場を選択:</label>
+        <label for="siteSelect" class="block text-gray-700 text-sm text-white font-bold mb-2">現場を選択</label>
         <div class="flex flex-wrap gap-4">
             @foreach($sites as $site)
             <button wire:click="$set('site_id', '{{ $site->id }}')" class="flex-1 px-4 py-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent {{ $site_id == $site->id ? 'bg-blue-600 text-white hover:bg-blue-700 focus:bg-blue-700' : 'bg-blue-100 text-blue-800 hover:bg-blue-200 focus:bg-blue-200' }} cursor-pointer dark:text-blue-400 dark:bg-blue-800/30 dark:hover:bg-blue-800/20 dark:focus:bg-blue-800/20">

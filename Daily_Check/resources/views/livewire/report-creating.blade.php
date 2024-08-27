@@ -81,9 +81,11 @@
     <div x-data="{ show: true }" x-show="show" @click="show = false" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
         <div class="bg-white rounded-lg p-6 shadow-lg">
             <p class="text-lg text-green-600 font-semibold">{{ session('success') }}</p>
-            <button @click="show = false" class="mt-4 inline-block bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-                閉じる
-            </button>
+            <div class="mt-4 flex justify-center">
+                <button @click="show = false" class="inline-block bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                    閉じる
+                </button>
+            </div>
         </div>
     </div>
     @endif
