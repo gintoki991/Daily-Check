@@ -5,17 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class DailyReportUser extends Pivot
+class ScheduledUser extends Pivot
 {
     use HasFactory;
 
-    protected $table = 'daily_report_user';
+    protected $table = 'scheduled_user';
 
     protected $fillable = [
-        'daily_report_id',
+        'scheduled_id',
         'user_id',
-        'is_scheduled',
-        'is_actual',
         'site_id',
     ];
 
@@ -25,15 +23,21 @@ class DailyReportUser extends Pivot
         return $this->belongsTo(Site::class);
     }
 
-    // DailyReportとのリレーション設定
-    public function dailyReport()
+    // Scheduledとのリレーション設定
+    public function scheduled()
     {
-        return $this->belongsTo(DailyReport::class, 'daily_report_id');
+        return $this->belongsTo(Scheduled::class, 'scheduled_id');
     }
 
     // Userとのリレーション設定
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    // ScheduledUserRolesとのリレーション設定
+    public function roles()
+    {
+        return $this->hasMany(ScheduledUserRole::class, 'scheduled_user_id');
     }
 }

@@ -1,75 +1,90 @@
 <div>
     {{-- 日報作成画面 --}}
     <section class="text-white body-font relative">
-        <div class="container px-5 py-2 mx-auto">
-            <div class="flex flex-col text-center w-full mb-12">
-                <!-- <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">入力フォーム</h1> -->
+        <div class="container px-0 py-2 mx-auto">
+            <div class="caption-top text-center text-lg font-semibold mb-4">
+                日報を作成する
             </div>
 
-            <form wire:submit.prevent="store">
-                <div class="lg:w-1/2 md:w-2/3 mx-auto">
-                    <div class="flex flex-wrap -m-2">
-                        <!-- 日付を選択 -->
-                        <div class="p-2 w-1/2">
-                            <label for="report_create_date" class="text-sm text-gray-800">日付を選択</label>
-                            <input type="date" id="report_create_date" wire:model="date" class="w-full"><br>
-                            <!-- 時間を選択 -->
-                            <label for="start_time" class="text-sm text-gray-800">開始時間</label>
-                            <input type="time" id="start_time" wire:model="start_time" class="w-full"><br>
-                            <label for="end_time" class="text-sm text-gray-800">終了時間</label>
-                            <input type="time" id="end_time" wire:model="end_time" class="w-full"><br>
-                        </div>
-                        <!-- 現場を選択dropDown -->
-                        <div class="p-2 w-1/2">
-                            <div class="mx-auto w-full max-w-xs">
-                                <label class="text-sm text-gray-800">現場を選択</label>
-                                <div class="mt-1">
-                                    <select wire:model="selectedSite" class="mt-1 block w-full rounded-md border border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
-                                        <option value="">選択してください</option>
-                                        @foreach($sites as $site)
-                                        <option value="{{ $site->id }}">{{ $site->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- 現場責任者 -->
-                        <div class="p-2 w-1/2">
-                            <div class="relative">
-                                <label for="person_in_charge" class="leading-7 text-sm text-gray-600">現場責任者</label>
-                                <select id="person_in_charge" wire:model="person_in_charge" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-                                    <option value="">選択してください</option>
-                                    @foreach($employees as $employee)
-                                    <option value="{{ $employee->id }}">{{ $employee->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="p-2 w-full">
-                            <!-- 実際に現場に入った人チェックボックス -->
-                            <label class="text-sm text-gray-800">実際に現場に入った人をチェックしてください</label>
-                            <div class="w-max">
-                                @foreach($employees as $employee)
-                                <label class="block text-gray-700 my-1 flex items-center">
-                                    <input type="checkbox" wire:model="selectedEmployees" value="{{ $employee->id }}" class="mr-2 w-4 h-4 focus:ring-2">
-                                    <span>{{ $employee->name }}</span>
-                                </label>
-                                @endforeach
-                            </div>
+            <form wire:submit.prevent="store" class="grid grid-cols-1 gap-4 text-left">
+                <!-- 日付を選択 -->
+                <div>
+                    <label for="report_create_date" class="block text-sm font-medium text-gray-700">日付を選択</label>
+                    <input type="date" id="report_create_date" wire:model="date" class="mt-1 w-5/6 rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                </div>
 
-                            <!-- コメント入力欄 -->
-                            <div class="relative">
-                                <label for="comment" class="leading-7 text-sm text-gray-600">コメント</label>
-                                <textarea id="comment" wire:model="comment" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
-                            </div>
-                        </div>
-                        <div class="p-2 w-full">
-                            <button type="submit" class="flex mx-auto text-white bg-indigo-500 border-0 py-2 px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">提　出</button>
-                        </div>
+                <!-- 開始時間を選択 -->
+                <div>
+                    <label for="start_time" class="block text-sm font-medium text-gray-700">開始時間</label>
+                    <input type="time" id="start_time" wire:model="start_time" class="mt-1 w-5/6 rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                </div>
 
+                <!-- 終了時間を選択 -->
+                <div>
+                    <label for="end_time" class="block text-sm font-medium text-gray-700">終了時間</label>
+                    <input type="time" id="end_time" wire:model="end_time" class="mt-1 w-5/6 rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                </div>
+
+                <!-- 現場を選択 -->
+                <div>
+                    <label for="selectedSite" class="block text-sm font-medium text-gray-700">現場を選択</label>
+                    <select id="selectedSite" wire:model="selectedSite" class="mt-1 block w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                        <option value="">選択してください</option>
+                        @foreach($sites as $site)
+                        <option value="{{ $site->id }}">{{ $site->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- 現場責任者 -->
+                <div>
+                    <label for="person_in_charge" class="block text-sm font-medium text-gray-700">現場責任者</label>
+                    <select id="person_in_charge" wire:model="person_in_charge" class="mt-1 block w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                        <option value="">選択してください</option>
+                        @foreach($employees as $employee)
+                        <option value="{{ $employee->id }}">{{ $employee->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- 実際に現場に入った人チェックボックス -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">現場に入った人をチェック</label>
+                    <div class="mt-2 space-y-2">
+                        @foreach($employees as $employee)
+                        <label class="flex items-center text-gray-700 cursor-pointer">
+                            <input type="checkbox" wire:model="selectedEmployees" value="{{ $employee->id }}" class="mr-2 w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500 cursor-pointer">
+                            <span>{{ $employee->name }}</span>
+                        </label>
+                        @endforeach
                     </div>
+                </div>
+
+                <!-- コメント入力欄 -->
+                <div>
+                    <label for="comment" class="block text-sm font-medium text-gray-700">コメント</label>
+                    <textarea id="comment" wire:model="comment" class="mt-2 w-5/6 rounded-lg border-gray-200 bg-white shadow-sm sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none cursor-pointer" rows="4" placeholder="連絡事項を入力してください"></textarea>
+                </div>
+
+                <!-- 送信ボタン -->
+                <div class="flex justify-center">
+                    <button type="submit" class="w-2/3 py-2 px-8 inline-flex justify-center items-center gap-x-2 font-semibold text-lg font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none cursor-pointer">
+                        提　出
+                    </button>
                 </div>
             </form>
         </div>
     </section>
+
+    <!-- ポップアップメッセージ -->
+    @if (session()->has('success'))
+    <div x-data="{ show: true }" x-show="show" @click="show = false" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
+        <div class="bg-white rounded-lg p-6 shadow-lg">
+            <p class="text-lg text-green-600 font-semibold">{{ session('success') }}</p>
+            <button @click="show = false" class="mt-4 inline-block bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                閉じる
+            </button>
+        </div>
+    </div>
+    @endif
 </div>

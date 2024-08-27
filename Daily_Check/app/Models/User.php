@@ -23,7 +23,6 @@ class User extends Authenticatable
         'password',
         'belong_to',
         'daily_report_id',
-        'site_id',
     ];
 
     /**
@@ -55,11 +54,11 @@ class User extends Authenticatable
             ->using(DailyReportUser::class);
     }
 
-    // sitesとのリレーション設定（中間テーブル使用）
-    public function sites()
-    {
-        return $this->belongsToMany(Site::class, 'sites_users', 'user_id', 'site_id');
-    }
+    // // sitesとのリレーション設定（中間テーブル使用）
+    // public function sites()
+    // {
+    //     return $this->belongsToMany(Site::class, 'sites_users', 'user_id', 'site_id');
+    // }
 
     /**
      * The attributes that should be cast.

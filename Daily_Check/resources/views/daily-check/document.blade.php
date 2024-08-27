@@ -11,9 +11,9 @@
       <div class="self-stretch flex flex-col items-center justify-start gap-[0.812rem] max-w-full">
 
         <!-- 一週間の予定（現場），当日の詳細情報 -->
-        <div>
-          @livewire('document-list')
+        <div class="py-4">
           @livewire('documentUpload')
+          @livewire('document-list')
         </div>
 
       </div>

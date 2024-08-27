@@ -1,22 +1,45 @@
-<div class="text-gray-700 py-8 flex flex-wrap md:flex-nowrap">
-    <div class="md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col">
-        <span class="font-semibold title-font">ログインユーザー名</span>
-        <span class="mt-1 text-gray-500 text-sm">{{ $userName }}</span>
-        <span class="mt-1 text-gray-500 text-sm">{{ $currentDate }}</span>
+<div class="w-full p-2 overflow-x-auto container mx-auto px-0 py-2 bg-white rounded-md max-w-4xl">
+    <div class="text-center text-lg font-semibold mb-4">
+        ” {{ $currentDate }} ” {{ $userName }}さんの予定
     </div>
-    <div class="md:flex-grow">
-        <h2 class="text-2xl font-medium text-gray-900 title-font mb-2">現　場　名: {{ $currentSiteName }}</h2>
-        <h1 class="text-2xl font-medium text-gray-900 title-font mb-2">連絡事項：</h1>
-        <p class="leading-relaxed">
-            @foreach($announcements as $announcement)
-            {{ $announcement }}<br>
-            @endforeach
-        </p>
-        <h1 class="text-2xl font-medium text-gray-900 title-font mb-2">メンバー（予定）：</h1>
-        <p class="leading-relaxed">
-            @foreach($scheduledUsers as $user)
-            {{ $user }}<br>
-            @endforeach
-        </p>
-    </div>
+
+    <table class="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
+        <!-- <thead class="bg-gray-50 dark:bg-neutral-700">
+            <tr>
+                <th class="w-1/3 px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-400">項目</th>
+                <th class="w-2/3 px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-400">内容</th>
+            </tr>
+        </thead> -->
+        <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
+
+            <tr>
+                <td class="w-1/3 px-3 py-1 text-sm font-medium text-gray-800 dark:text-neutral-200">現場名</td>
+                <td class="w-2/3 px-3 py-1 text-sm text-gray-800 dark:text-neutral-200">{{ $currentSiteName }}</td>
+            </tr>
+            <tr>
+                <td class="w-1/3 px-3 py-1 text-sm font-medium text-gray-800 dark:text-neutral-200">連絡事項</td>
+                <td class="w-2/3 px-3 py-1 text-sm text-gray-800 dark:text-neutral-200">
+                    <ul class="list-disc pl-3">
+                        @forelse($announcements as $announcement)
+                        <li>{{ $announcement['date'] }} {{ $announcement['comment'] }}</li>
+                        @empty
+                        <li>連絡事項はありません。</li>
+                        @endforelse
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <td class="w-1/3 px-3 py-1 text-sm font-medium text-gray-800 dark:text-neutral-200">メンバー（予定）</td>
+                <td class="w-2/3 px-3 py-1 text-sm text-gray-800 dark:text-neutral-200">
+                    <ul class="list-disc pl-3">
+                        @forelse($scheduledUsers as $user)
+                        <li>{{ $user }}</li>
+                        @empty
+                        <li>予定されているユーザーはいません。</li>
+                        @endforelse
+                    </ul>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>

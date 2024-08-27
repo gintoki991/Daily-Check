@@ -79,25 +79,31 @@ class DailyCheckController extends Controller
     {
         return view('/daily-check/site_management');
     }
+
     public function siteStore(Request $request)
     {
-        try {
-            // バリデーションルールを指定する
-            $validated = $request->validate([
-                'site_name' => 'required|string|max:255',
-            ]);
+        // バリデーションルールを指定する
+        $validated = $request->validate([
+            'site_name' => 'required|string|max:255|unique:sites,name',
+        ], [
+            'site_name.required' => '現場名を入力してください',
+            'site_name.unique' => 'この現場名は既に登録されています',
+        ]);
 
+        try {
             // データを保存する
             Site::create([
                 'name' => $validated['site_name'],
             ]);
 
-            session()->flash('message', 'Site created successfully.');
-        } catch (ValidationException $e) {
-            // バリデーションエラーメッセージを表示
-            dd($e->errors());
+            // 成功メッセージをセッションに保存
+            session()->flash('message', '現場が正常に作成されました。');
+            return redirect()->route('site.management')->with('status', 'Registration successful!');
+        } catch (\Exception $e) {
+            // エラーメッセージをセッションに保存
+            session()->flash('error', '現場の作成に失敗しました。');
+            return back()->withInput();
         }
-        return redirect()->route('site.management')->with('status', 'Registration successful!');
     }
 
     public function showLogin()

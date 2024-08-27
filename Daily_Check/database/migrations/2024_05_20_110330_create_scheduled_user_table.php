@@ -6,9 +6,12 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
-        Schema::create('actuals', function (Blueprint $table) {
+        Schema::create('scheduled_user', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('scheduled_id');
             $table->unsignedBigInteger('user_id');
@@ -16,8 +19,10 @@ return new class extends Migration
             $table->timestamps();
 
             $table->foreign('scheduled_id')->references('id')->on('scheduleds')->onDelete('cascade');
-            $table->foreign('site_id')->references('id')->on('sites')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('site_id')->references('id')->on('sites')->onDelete('cascade');
+
+            $table->unique(['scheduled_id', 'user_id', 'site_id']);
         });
     }
 
@@ -26,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('actuals');
+        Schema::dropIfExists('scheduled_user');
     }
 };

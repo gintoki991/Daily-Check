@@ -16,15 +16,14 @@ class DailyReport extends Model
         'person_in_charge',
         'scheduled_id',
         'site_id',
-        'date',
     ];
 
     // usersとのリレーション設定（中間テーブル使用）
     public function users()
     {
-        return $this->belongsToMany(User::class, 'daily_report_user', 'daily_report_id', 'user_id')
+        return $this->belongsToMany(User::class, 'scheduled_user', 'scheduled_id', 'user_id')
             ->withPivot('is_scheduled', 'is_actual', 'site_id')
-            ->using(DailyReportUser::class);
+            ->using(ScheduledUser::class);
     }
 
     // siteとのリレーション設定
@@ -38,13 +37,22 @@ class DailyReport extends Model
     {
         return $this->belongsTo(Scheduled::class);
     }
+
+    // 担当者とのリレーション設定
     public function personInCharge()
     {
         return $this->belongsTo(User::class, 'person_in_charge');
     }
-    public function actualUsers()
+
+    // 実際に参加したユーザーとのリレーション設定
+    public function scheduledUser()
     {
-        return $this->belongsToMany(User::class, 'daily_report_user', 'daily_report_id', 'user_id')
-        ->wherePivot('is_actual', true);
+        return $this->hasOne(ScheduledUser::class, 'scheduled_id', 'scheduled_id');
     }
+
+    public function roles()
+    {
+        return $this->hasManyThrough(ScheduledUserRole::class, ScheduledUser::class, 'scheduled_id', 'scheduled_user_id', 'scheduled_id', 'id');
+    }
+
 }
