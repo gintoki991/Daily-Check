@@ -19,7 +19,9 @@ class DailyBoard extends Component
     public function mount()
     {
         $this->userName = Auth::user()->name;
-        $this->currentDate = Carbon::now()->format('Y年m月d日');
+        // setlocale(LC_TIME, 'ja_JP.UTF-8'); // これを一時的にコメントアウト
+        Carbon::setLocale('ja');
+        $this->currentDate = Carbon::now()->format('n/j') . '(' . Carbon::now()->isoFormat('ddd') . ')';
         $this->loadSiteAndAnnouncements();
     }
 
@@ -45,14 +47,14 @@ class DailyBoard extends Component
             // 過去一週間分のコメントを取得
             $oneWeekAgo = Carbon::now()->subWeek()->format('Y-m-d');
             $this->announcements = DailyReport::where('site_id', $scheduledUser->site->id)
-                ->whereHas('scheduled', function ($query) use ($oneWeekAgo, $today) {
-                    $query->whereBetween('date', [$oneWeekAgo, $today]);
-                })
-                ->with('scheduled') // ここでリレーションを読み込む
-                ->get()
+            ->whereHas('scheduled', function ($query) use ($oneWeekAgo, $today) {
+                $query->whereBetween('date', [$oneWeekAgo, $today]);
+            })
+            ->with('scheduled') // ここでリレーションを読み込む
+            ->get()
                 ->map(function ($report) {
                     return [
-                        'date' => $report->scheduled ? Carbon::parse($report->scheduled->date)->format('Y年m月d日') : '日付不明',
+                        'date' => $report->scheduled ? Carbon::parse($report->scheduled->date)->format('n/j') . '(' . Carbon::parse($report->scheduled->date)->isoFormat('ddd') . ')' : '日付不明',
                         'comment' => $report->comment,
                     ];
                 })
@@ -73,7 +75,7 @@ class DailyBoard extends Component
                 ->toArray();
         } else {
             $this->currentSiteName = '未定';
-            $this->announcements = ['連絡事項はありません。'];
+            $this->announcements = [['date' => '', 'comment' => '連絡事項はありません。']];
             $this->scheduledUsers = ['予定されているユーザーはいません。'];
         }
     }

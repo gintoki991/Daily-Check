@@ -14,11 +14,11 @@ class Site extends Model
         'user_id'
     ];
 
-    // usersとのリレーション設定（中間テーブル使用）
-    public function users() 
-    {
-        return $this->belongsToMany(User::class, 'article_tags', 'article_id', 'tag_id');
-    }
+    // // usersとのリレーション設定（中間テーブル使用）
+    // public function users()
+    // {
+    //     return $this->belongsToMany(User::class, 'article_tags', 'article_id', 'tag_id');
+    // }
 
     // documentsとのリレーション設定
     public function documents()

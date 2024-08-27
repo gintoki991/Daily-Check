@@ -71,7 +71,7 @@ class ScheduleRegistration extends Component
         } catch (ValidationException $e) {
             DB::rollBack();
             Log::error('バリデーションエラー: ' . json_encode($e->errors()));
-            session()->flash('error', 'バリデーションエラーが発生しました。');
+            // バリデーションエラーはsession()->flashではなく、自動的にエラーメッセージが表示される
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('データの保存に失敗しました: ' . $e->getMessage());

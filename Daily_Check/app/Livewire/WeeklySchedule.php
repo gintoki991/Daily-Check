@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class WeeklySchedule extends Component
 {
     public $weeklySchedule = [];
+    public $currentDate;
 
     public function mount()
     {
@@ -21,6 +22,9 @@ class WeeklySchedule extends Component
         $userId = Auth::id();
         $startOfWeek = Carbon::now()->startOfWeek();
         $endOfWeek = $startOfWeek->copy()->endOfWeek();
+
+        // 現在の日付を設定する
+        $this->currentDate = Carbon::now()->format('n/j') . '(' . Carbon::now()->isoFormat('ddd') . ')';
 
         // ScheduledUserテーブルを使用してスケジュールを取得
         $scheduled = ScheduledUser::where('user_id', $userId)
@@ -38,12 +42,16 @@ class WeeklySchedule extends Component
 
         $this->weeklySchedule = [];
 
+        Carbon::setLocale('ja'); // ロケール設定
+
         for ($date = $startOfWeek; $date->lte($endOfWeek); $date->addDay()) {
-            $dateFormatted = $date->format('Y-m-d');
-            if (isset($scheduled[$dateFormatted])) {
-                $this->weeklySchedule[$dateFormatted] = $scheduled[$dateFormatted]->pluck('site.name')->toArray();
+            $dateKey = $date->format('Y-m-d'); // 内部的に使用するための標準フォーマット
+            $displayDate = $date->format('n/j') . '(' . $date->isoFormat('ddd') . ')'; // 表示用のフォーマット
+
+            if (isset($scheduled[$dateKey])) {
+                $this->weeklySchedule[$displayDate] = $scheduled[$dateKey]->pluck('site.name')->toArray();
             } else {
-                $this->weeklySchedule[$dateFormatted] = ['未定'];
+                $this->weeklySchedule[$displayDate] = ['未定'];
             }
         }
     }
