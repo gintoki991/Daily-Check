@@ -13,6 +13,11 @@ new class extends Component
 }; ?>
 
 <nav x-data="{ open: false }" class="bg-customGreen border-b border-gray-100">
+    @if (!auth()->check())
+    <script>
+        window.location.href = "{{ route('login') }}";
+    </script>
+    @else
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -133,4 +138,5 @@ new class extends Component
             </div>
         </div>
     </div>
+    @endif
 </nav>
