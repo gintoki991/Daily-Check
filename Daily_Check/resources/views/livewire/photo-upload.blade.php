@@ -2,7 +2,7 @@
     <div class="caption-top text-center text-lg font-semibold mb-4">
         写真をアップロードする
     </div>
-    <form wire:submit.prevent="save" class="grid grid-cols-6 gap-4">
+    <form wire:submit.prevent="save" class="grid grid-cols-6 gap-4" enctype="multipart/form-data">
 
         <!-- 現場選択 -->
         <div class="col-span-6">

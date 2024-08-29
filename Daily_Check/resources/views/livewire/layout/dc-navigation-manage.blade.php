@@ -100,7 +100,7 @@ new class extends Component
             <x-responsive-nav-link :href="route('workers.arrangement')" :active="request()->routeIs('dashboard')" wire:navigate>
                 {{ __('人員配置計画') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
+            <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')" wire:navigate>
                 {{ __('ホーム') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('photoListManagement')" :active="request()->routeIs('photoListManagement')" wire:navigate>

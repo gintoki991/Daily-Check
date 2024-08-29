@@ -38,14 +38,6 @@ Route::view('/', 'welcome');
 
 Route::view('/navbar', 'navbar');
 
-// テスト用
-Route::get('/daily-check/test-creating', function () {
-    return view('/daily-check/test_creating');
-});
-Route::get('/test', function () {
-    return view('test');
-});
-
 Route::controller(DailyCheckController::class)
     ->group(function () {
         // Route::get('/daily-check/test-creating', 'testCreate')->name('test.create');
