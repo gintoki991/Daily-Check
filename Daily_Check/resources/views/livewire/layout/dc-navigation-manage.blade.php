@@ -12,7 +12,7 @@ new class extends Component
     }
 }; ?>
 
-<nav x-data="{ open: false }" class="bg-customGreen border-b border-gray-100">
+<nav x-data="{ open: false }" class="bg-yellow-500 border-b border-gray-100">
     @if (!auth()->check())
     <script>
         window.location.href = "{{ route('login') }}";
@@ -31,23 +31,23 @@ new class extends Component
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('workers.arrangement')" :active="request()->routeIs('dashboard')" wire:navigate>
-                        {{ __('人員配置計画') }}
-                    </x-nav-link>
                     <x-nav-link :href="route('home')" :active="request()->routeIs('home')" wire:navigate>
                         {{ __('ホーム') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('photoListManagement')" :active="request()->routeIs('photoListManagement')" wire:navigate>
-                        {{ __('写真管理') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('documentListManagement')" :active="request()->routeIs('documentListManagement')" wire:navigate>
-                        {{ __('書類管理') }}
+                    <x-nav-link :href="route('site.management')" :active="request()->routeIs('dashboard')" wire:navigate>
+                        {{ __('現場') }}
                     </x-nav-link>
                     <x-nav-link :href="route('employee.management')" :active="request()->routeIs('ReportCreating')" wire:navigate>
-                        {{ __('従業員管理') }}
+                        {{ __('従業員') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('site.management')" :active="request()->routeIs('dashboard')" wire:navigate>
-                        {{ __('現場管理') }}
+                    <x-nav-link :href="route('workers.arrangement')" :active="request()->routeIs('dashboard')" wire:navigate>
+                        {{ __('計画') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('photoListManagement')" :active="request()->routeIs('photoListManagement')" wire:navigate>
+                        {{ __('写真') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('documentListManagement')" :active="request()->routeIs('documentListManagement')" wire:navigate>
+                        {{ __('書類') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -97,23 +97,23 @@ new class extends Component
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('workers.arrangement')" :active="request()->routeIs('dashboard')" wire:navigate>
-                {{ __('人員配置計画') }}
-            </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')" wire:navigate>
                 {{ __('ホーム') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('site.management')" :active="request()->routeIs('dashboard')" wire:navigate>
+                {{ __('現場管理') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('employee.management')" :active="request()->routeIs('dashboard')" wire:navigate>
+                {{ __('従業員管理') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('workers.arrangement')" :active="request()->routeIs('dashboard')" wire:navigate>
+                {{ __('スケジュール') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('photoListManagement')" :active="request()->routeIs('photoListManagement')" wire:navigate>
                 {{ __('写真管理') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('documentListManagement')" :active="request()->routeIs('documentListManagement')" wire:navigate>
                 {{ __('書類管理') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('employee.management')" :active="request()->routeIs('dashboard')" wire:navigate>
-                {{ __('従業員管理') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('site.management')" :active="request()->routeIs('dashboard')" wire:navigate>
-                {{ __('現場管理') }}
             </x-responsive-nav-link>
         </div>
 

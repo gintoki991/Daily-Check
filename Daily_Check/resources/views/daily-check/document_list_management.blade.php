@@ -1,8 +1,8 @@
 <x-admin-layout>
 
   <x-slot name="header">
-    <h2 class="font-semibold text-xl text-white text-center leading-tight">
-      {{ __('管理者ページ　書類管理画面') }}
+    <h2 class="font-semibold text-xl text-yellow-500 text-center leading-tight">
+      {{ __('書類管理ページ') }}
     </h2>
   </x-slot>
 

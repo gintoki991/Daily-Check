@@ -1,8 +1,8 @@
 <x-app-layout>
 
   <x-slot name="header">
-    <h2 class="font-semibold text-xl text-white text-center leading-tight">
-      {{ __('写真閲覧画面') }}
+    <h2 class="font-semibold text-xl text-customGreen text-center leading-tight">
+      {{ __('写真閲覧ページ') }}
     </h2>
   </x-slot>
 

@@ -21,7 +21,7 @@
                 <td class="w-2/3 px-3 py-1 text-sm text-gray-800 dark:text-neutral-200">
                     <ul class="list-disc pl-3">
                         @forelse($announcements as $announcement)
-                        <li>{{ $announcement['date'] }} {{ $announcement['comment'] }}</li>
+                        <li>{{ $announcement['date'] }}: {{ $announcement['comment'] }}</li>
                         @empty
                         <li>連絡事項はありません。</li>
                         @endforelse

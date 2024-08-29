@@ -1,8 +1,8 @@
 <x-app-layout>
 
   <x-slot name="header">
-    <h2 class="font-semibold text-xl text-white text-center leading-tight">
-      {{ __('日報編集画面') }}
+    <h2 class="font-semibold text-xl text-customGreen text-center leading-tight">
+      {{ __('日報編集ページ') }}
     </h2>
   </x-slot>
 

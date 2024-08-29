@@ -33,7 +33,10 @@ Route::get('logout', function () {
 
 Route::get('/dashboard', [DailyCheckController::class, 'index'])->middleware('auth');
 
-Route::view('/', 'welcome');
+// Route::view('/', 'welcome');
+Route::get('/', function () {
+    return redirect('/login');
+});
 
 Route::view('/navbar', 'navbar');
 

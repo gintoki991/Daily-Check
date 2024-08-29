@@ -29,7 +29,7 @@
             {{ $documents->links() }}
         </div>
         @else
-        <p class="text-center">この現場には書類がありません。</p>
+        <p class="text-white text-center">この現場には書類がありません</p>
         @endif
     </div>
     @endif
