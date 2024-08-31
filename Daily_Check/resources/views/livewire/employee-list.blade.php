@@ -1,6 +1,6 @@
 <div class="w-full p-2 overflow-x-auto container mx-auto px-4 py-8 bg-white rounded-md max-w-4xl">
     <table class="w-full border-collapse border border-slate-400">
-        <caption class="caption-top text-lg font-semibold mb-4">
+        <caption class="caption-top text-xl font-semibold mb-4">
             従業員一覧
         </caption>
         <thead>
@@ -40,11 +40,11 @@
                 <td class="border border-slate-300 px-4 py-2">
                     <div class="flex justify-end space-x-2">
                         <!-- 編集ボタン（濃いグレー） -->
-                        <button wire:click="edit({{ $employee->id }})" class="py-2 px-3 inline-flex items-center text-sm font-semibold rounded-lg bg-gray-900 text-gray-100 hover:bg-gray-700 cursor-pointer">
+                        <button wire:click="edit({{ $employee->id }})" class="py-2 px-3 inline-flex items-center text-lg font-semibold rounded-lg bg-gray-900 text-gray-100 hover:bg-gray-700 cursor-pointer">
                             編集
                         </button>
                         <!-- 削除ボタン（赤） -->
-                        <button wire:click="confirmDelete({{ $employee->id }})" class="py-2 px-3 inline-flex items-center text-sm font-semibold rounded-lg bg-red-600 text-white hover:bg-red-700 cursor-pointer">
+                        <button wire:click="confirmDelete({{ $employee->id }})" class="py-2 px-3 inline-flex items-center text-lg font-semibold rounded-lg bg-red-600 text-white hover:bg-red-700 cursor-pointer">
                             削除
                         </button>
                     </div>
@@ -63,9 +63,6 @@
             <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div class="sm:flex sm:items-start">
                     <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                        <h3 class="text-lg leading-6 font-medium text-center text-gray-900" id="modal-title">
-                            削除確認
-                        </h3>
                         <div class="mt-2">
                             <p class="text-sm text-gray-500">
                                 本当に削除しますか？
@@ -74,11 +71,13 @@
                     </div>
                 </div>
             </div>
-            <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                <button type="button" wire:click="delete" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg bg-red-600 text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm cursor-pointer">
+            <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse flex items-center justify-center">
+                <!-- 「はい」ボタン（赤） -->
+                <button type="button" wire:click="delete" class="py-2 px-3 mx-2 mb-2 inline-flex items-center gap-x-2 text-lg font-semibold rounded-lg border border-transparent bg-red-600 text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm cursor-pointer">
                     はい
                 </button>
-                <button type="button" wire:click="cancelDelete" class="py-2 px-3 mt-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg bg-green-500 text-white hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:mt-0 sm:w-auto sm:text-sm cursor-pointer">
+                <!-- 「いいえ」ボタン　-->
+                <button type="button" wire:click="cancelDelete" class="py-2 px-3 mx-2 mb-2 inline-flex items-center gap-x-2 text-lg font-semibold rounded-lg border border-transparent bg-gray-900 text-black hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900 sm:mt-0 sm:w-auto sm:text-sm cursor-pointer">
                     いいえ
                 </button>
             </div>

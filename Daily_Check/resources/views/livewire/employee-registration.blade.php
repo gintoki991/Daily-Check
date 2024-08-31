@@ -1,5 +1,5 @@
 <div class="max-w-lg mx-auto bg-white rounded-lg p-10 sm:px-8 sm:py-8 w-full">
-    <div class="caption-top text-center text-lg font-semibold mb-4">
+    <div class="caption-top text-center text-xl font-semibold mb-4">
         従業員を新規登録する
     </div>
 

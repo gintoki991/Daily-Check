@@ -3,7 +3,7 @@
         <label for="siteSelect" class="block text-gray-700 text-sm text-white font-bold mb-2">現場を選択</label>
         <div class="flex flex-wrap gap-4">
             @foreach($sites as $site)
-            <button wire:click="$set('site_id', '{{ $site->id }}')" class="flex-1 px-4 py-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent {{ $site_id == $site->id ? 'bg-blue-600 text-white hover:bg-blue-700 focus:bg-blue-700' : 'bg-blue-100 text-blue-800 hover:bg-blue-200 focus:bg-blue-200' }} cursor-pointer dark:text-blue-400 dark:bg-blue-800/30 dark:hover:bg-blue-800/20 dark:focus:bg-blue-800/20">
+            <button wire:click="$set('site_id', '{{ $site->id }}')" class="flex-1 px-4 py-2 inline-flex items-center gap-x-2 text-lg font-medium rounded-lg border border-transparent {{ $site_id == $site->id ? 'bg-blue-600 text-white hover:bg-blue-700 focus:bg-blue-700' : 'bg-blue-100 text-blue-800 hover:bg-blue-200 focus:bg-blue-200' }} cursor-pointer dark:text-blue-400 dark:bg-blue-800/30 dark:hover:bg-blue-800/20 dark:focus:bg-blue-800/20">
                 {{ $site->name }}
             </button>
             @endforeach
@@ -19,31 +19,45 @@
         @if ($documents->count())
         <div class="grid grid-cols-1 gap-4">
             @foreach ($documents as $document)
-            <div class="border rounded p-4 overflow-hidden">
+            <div class="border rounded py-4 overflow-hidden">
                 <div class="flex items-center justify-between">
-                    <span class="inline-flex -space-x-px overflow-hidden rounded-md border bg-white shadow-sm">
-                        <button
-                            wire:click="confirmDeletion({{ $document->id }})"
-                            class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium font-semibold rounded-lg border border-transparent bg-red-500 text-white hover:bg-red-600 focus:outline-none cursor-pointer focus:bg-red-600 disabled:opacity-50 disabled:pointer-events-none">
-                            削 除
-                        </button>
+                    <div class="flex flex-row items-center w-full gap-4">
+                        <!-- 削除ボタン -->
+                        <div class="flex-none">
+                            <button
+                                wire:click="confirmDeletion({{ $document->id }})"
+                                class="py-3 px-4 inline-flex items-center gap-x-2 text-lg font-medium font-semibold rounded-lg border border-transparent bg-red-500 text-white hover:bg-red-600 focus:outline-none cursor-pointer focus:bg-red-600 disabled:opacity-50 disabled:pointer-events-none">
+                                削 除
+                            </button>
+                        </div>
 
                         @if ($editingDocumentId === $document->id)
-                        <input type="text" wire:model="newDocumentTitle" class="p-2 border rounded-md w-[300%]" />
+                        <!-- 編集モードの入力フィールドと保存ボタン -->
+                        <div class="flex-grow flex items-center">
+                            <input type="text" wire:model="newDocumentTitle" class="p-2 border rounded-md w-full" />
 
-                        <button
-                            wire:click="updateDocument"
-                            class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium font-semibold rounded-lg border border-transparent bg-teal-500 text-white hover:bg-teal-600 cursor-pointer focus:outline-none focus:bg-teal-600 disabled:opacity-50 disabled:pointer-events-none">
-                            保存
-                        </button>
+                            <button
+                                wire:click="updateDocument"
+                                class="ml-2 py-3 px-4 inline-flex items-center gap-x-2 text-lg font-medium font-semibold rounded-lg border border-transparent bg-teal-500 text-white hover:bg-teal-600 cursor-pointer focus:outline-none focus:bg-teal-600 disabled:opacity-50 disabled:pointer-events-none">
+                                保存
+                            </button>
+                        </div>
                         @else
-                        <button
-                            wire:click="editDocument({{ $document->id }})"
-                            class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-gray-200 text-gray-700 hover:bg-gray-300 cursor-pointer focus:outline-none focus:bg-gray-300">
-                            書類名を編集
-                        </button>
+                        <!-- 通常の状態の編集ボタンと書類名 -->
+                        <div class="flex-none">
+                            <button
+                                wire:click="editDocument({{ $document->id }})"
+                                class="py-3 px-4 inline-flex items-center gap-x-2 text-lg font-medium rounded-lg border border-transparent bg-gray-200 text-gray-700 hover:bg-gray-300 cursor-pointer focus:outline-none focus:bg-gray-300">
+                                書類名を編集
+                            </button>
+                        </div>
+
+                        <!-- 書類名の表示 -->
+                        <div class="flex-grow">
+                            <span class="text-lg font-medium text-gray-800">{{ $document->title }}</span>
+                        </div>
                         @endif
-                    </span>
+                    </div>
                 </div>
                 <iframe src="{{ Storage::url($document->pdf_path) }}" width="100%" height="500px" class="mt-4"></iframe>
             </div>
@@ -53,7 +67,7 @@
             {{ $documents->links() }}
         </div>
         @else
-        <p class="text-white text-center">この現場には書類がありません。</p>
+        <p class="text-white text-center">この現場には書類がありません</p>
         @endif
     </div>
     @endif

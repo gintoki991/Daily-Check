@@ -53,13 +53,13 @@
 
                         <button
                             wire:click="updatePhoto"
-                            class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold font-medium rounded-lg border border-transparent bg-teal-500 text-white hover:bg-teal-600 cursor-pointer focus:outline-none focus:bg-teal-600 disabled:opacity-50 disabled:pointer-events-none">
+                            class="py-3 px-4 inline-flex items-center gap-x-2 text-lg font-semibold font-medium rounded-lg border border-transparent bg-teal-500 text-white hover:bg-teal-600 cursor-pointer focus:outline-none focus:bg-teal-600 disabled:opacity-50 disabled:pointer-events-none">
                             保存
                         </button>
                         @else
                         <button
                             wire:click="editPhoto({{ $photo->id }})"
-                            class="py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-gray-200 text-gray-700 hover:bg-gray-300 cursor-pointer focus:outline-none focus:bg-gray-300">
+                            class="py-3 px-4 inline-flex items-center gap-x-2 text-lg font-medium rounded-lg border border-transparent bg-gray-200 text-gray-700 hover:bg-gray-300 cursor-pointer focus:outline-none focus:bg-gray-300">
                             部位を編集
                         </button>
                         @endif
@@ -74,7 +74,7 @@
             {{ $photos->links() }}
         </div>
         @else
-        <p class="text-center">この現場には写真がありません。</p>
+        <p class="text-white text-center">この現場には写真がありません</p>
         @endif
     </div>
     @endif

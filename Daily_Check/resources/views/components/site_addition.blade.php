@@ -1,6 +1,6 @@
 <div class="max-w-lg mx-auto bg-white rounded-lg p-6 sm:px-8 sm:py-8 w-full">
   <div class="caption-top text-center text-lg font-semibold mb-4">
-    現場を登録する
+    現場を登録
   </div>
 
   <form action="{{ route('site.store') }}" method="POST">

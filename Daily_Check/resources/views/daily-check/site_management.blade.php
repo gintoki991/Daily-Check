@@ -1,8 +1,8 @@
 <x-admin-layout>
 
   <x-slot name="header">
-    <h2 class="font-semibold text-xl text-white text-center leading-tight">
-      {{ __('現場（一覧）管理画面 site_list_management') }}
+    <h2 class="font-semibold text-xl text-yellow-500 text-center leading-tight">
+      {{ __('現場管理') }}
     </h2>
   </x-slot>
 
@@ -11,14 +11,14 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
 
         <!-- 現場一覧表表示（No.，現場名，詳細表示ボタン，ダウンロードボタン，削除ボタン），現場の追加登録（現場名，追加ボタン） -->
-          <div class="scale-100 p-2 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
+        <div class="scale-100 p-2 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
           <livewire:site-list />
         </div>
-          <div class="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
-            <x-site_addition />
-          </div>
-
+        <div class="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl from-gray-700/50 via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
+          <x-site_addition />
         </div>
+
+      </div>
     </section>
   </div>
 

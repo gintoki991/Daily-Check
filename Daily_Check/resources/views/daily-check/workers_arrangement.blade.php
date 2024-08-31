@@ -1,8 +1,8 @@
 <x-admin-layout>
 
   <x-slot name="header">
-    <h2 class="font-semibold text-xl text-white text-center leading-tight">
-      {{ __('人員配置計画画面') }}
+    <h2 class="font-semibold text-xl text-yellow-500 text-center leading-tight">
+      {{ __('スケジュール管理') }}
     </h2>
   </x-slot>
 

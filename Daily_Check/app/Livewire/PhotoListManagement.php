@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Photo;
 use App\Models\Site;
+use Illuminate\Support\Facades\Storage;
 
 class PhotoListManagement extends Component
 {
@@ -49,6 +50,9 @@ class PhotoListManagement extends Component
     {
         $photo = Photo::find($this->photoToDelete);
         if ($photo) {
+            // S3からファイルを削除
+            // Storage::disk('s3')->delete($photo->path);
+
             $photo->delete();
             session()->flash('message', 'Photo deleted successfully.');
         }
@@ -68,7 +72,7 @@ class PhotoListManagement extends Component
         $this->validate([
             'newPhotoTitle' => 'required|in:屋根,外壁,軒天',
         ]);
-        
+
         $photo = Photo::find($this->editingPhotoId);
         if ($photo) {
             $photo->part = $this->newPhotoTitle;

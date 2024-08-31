@@ -23,25 +23,25 @@
     <!-- Page Heading -->
     @if (isset($header))
     <header class="bg-customBlue shadow">
-      <div class="mx-auto py-6 px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto py-1 px-4 sm:px-6 lg:px-8">
         {{ $header }}
       </div>
     </header>
     @endif
 
-    <!-- ナビゲーションバーのコンポーネントを呼び出す -->
-    <livewire:layout.dc-navigation />
+    <!-- Page Footing -->
+    <!-- <x-footer /> -->
 
     <!-- Page Content -->
     <main>
       {{ $slot }}
     </main>
 
-    <!-- Page Footing -->
-    <x-footer />
+    <!-- ナビゲーションバーのコンポーネントを呼び出す -->
+    <livewire:layout.dc-navigation />
 
   </div>
-  @livewireScript
+  @livewireScripts
 </body>
 
 </html>

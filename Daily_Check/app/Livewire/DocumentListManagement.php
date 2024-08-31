@@ -7,6 +7,7 @@ use Livewire\WithPagination;
 use App\Models\Document;
 use App\Models\Site;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class DocumentListManagement extends Component
 {
@@ -47,7 +48,7 @@ class DocumentListManagement extends Component
         $document = Document::find($this->documentToDelete);
         if ($document) {
             $document->delete();
-            session()->flash('message', 'Document deleted successfully.');
+            session()->flash('message', '書類を削除しました');
         }
 
         $this->confirmingDocumentDeletion = false;
@@ -69,7 +70,7 @@ class DocumentListManagement extends Component
             $document->name = $this->newDocumentTitle;
             $document->save();
             $this->editingDocumentId = null;
-            session()->flash('message', 'Document updated successfully.');
+            session()->flash('message', '書類をアップデートしました');
         }
     }
 

@@ -1,18 +1,4 @@
-<?php
-
-use App\Livewire\Actions\Logout;
-use Livewire\Volt\Component;
-
-new class extends Component
-{
-    public function logout(Logout $logout): void
-    {
-        $logout();
-        $this->redirect('/', navigate: true);
-    }
-}; ?>
-
-<nav x-data="{ open: false }" class="bg-customGreen border-b border-gray-100">
+<nav x-data="{ open: false }" class="bg-yellow-500 border-b border-gray-100">
     @if (!auth()->check())
     <script>
         window.location.href = "{{ route('login') }}";
@@ -31,23 +17,23 @@ new class extends Component
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('workers.arrangement')" :active="request()->routeIs('dashboard')" wire:navigate>
-                        {{ __('人員配置計画') }}
-                    </x-nav-link>
                     <x-nav-link :href="route('home')" :active="request()->routeIs('home')" wire:navigate>
                         {{ __('ホーム') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('photoListManagement')" :active="request()->routeIs('photoListManagement')" wire:navigate>
-                        {{ __('写真管理') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('documentListManagement')" :active="request()->routeIs('documentListManagement')" wire:navigate>
-                        {{ __('書類管理') }}
+                    <x-nav-link :href="route('site.management')" :active="request()->routeIs('dashboard')" wire:navigate>
+                        {{ __('現場') }}
                     </x-nav-link>
                     <x-nav-link :href="route('employee.management')" :active="request()->routeIs('ReportCreating')" wire:navigate>
-                        {{ __('従業員管理') }}
+                        {{ __('従業員') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('site.management')" :active="request()->routeIs('dashboard')" wire:navigate>
-                        {{ __('現場管理') }}
+                    <x-nav-link :href="route('workers.arrangement')" :active="request()->routeIs('dashboard')" wire:navigate>
+                        {{ __('計画') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('photoListManagement')" :active="request()->routeIs('photoListManagement')" wire:navigate>
+                        {{ __('写真') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('documentListManagement')" :active="request()->routeIs('documentListManagement')" wire:navigate>
+                        {{ __('書類') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -61,7 +47,7 @@ new class extends Component
 
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                                 </svg>
                             </div>
                         </button>
@@ -82,6 +68,29 @@ new class extends Component
                 </x-dropdown>
             </div>
 
+            <!-- Mobile Navigation Menu -->
+            <div class="flex justify-center items-center sm:hidden p-2 bg-yellow-500 mt-2">
+                <!-- アイコンを使用したナビゲーションリンク -->
+                <!-- <a href="{{ route('home') }}" wire:navigate class="text-gray-800 hover:text-gray-500">
+                    <img src="{{ asset('assets/home-icon.svg') }}" alt="Home" class="w-9 h-9 px-2">
+                </a> -->
+                <a href="{{ route('site.management') }}" wire:navigate class="text-gray-800 hover:text-gray-500">
+                    <img src="{{ asset('assets/site-icon.svg') }}" alt="Site" class="w-9 h-9 px-1">
+                </a>
+                <a href="{{ route('employee.management') }}" wire:navigate class="text-gray-800 hover:text-gray-500">
+                    <img src="{{ asset('assets/employee-icon.svg') }}" alt="Employee" class="w-9 h-9 px-1">
+                </a>
+                <a href="{{ route('workers.arrangement') }}" wire:navigate class="text-gray-800 hover:text-gray-500">
+                    <img src="{{ asset('assets/arrangement-icon.svg') }}" alt="Arrangement" class="w-9 h-9 px-1">
+                </a>
+                <a href="{{ route('photoListManagement') }}" wire:navigate class="text-gray-800 hover:text-gray-500">
+                    <img src="{{ asset('assets/photo-icon.svg') }}" alt="Photo" class="w-9 h-9 px-1">
+                </a>
+                <a href="{{ route('documentListManagement') }}" wire:navigate class="text-gray-800 hover:text-gray-500">
+                    <img src="{{ asset('assets/document-icon.svg') }}" alt="Document" class="w-9 h-9 px-2">
+                </a>
+            </div>
+
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
                 <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
@@ -97,23 +106,23 @@ new class extends Component
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('workers.arrangement')" :active="request()->routeIs('dashboard')" wire:navigate>
-                {{ __('人員配置計画') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
+            <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')" wire:navigate>
                 {{ __('ホーム') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('site.management')" :active="request()->routeIs('site.management')" wire:navigate>
+                {{ __('現場管理') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('employee.management')" :active="request()->routeIs('employee.management')" wire:navigate>
+                {{ __('従業員管理') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('workers.arrangement')" :active="request()->routeIs('workers.arrangement')" wire:navigate>
+                {{ __('スケジュール') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('photoListManagement')" :active="request()->routeIs('photoListManagement')" wire:navigate>
                 {{ __('写真管理') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('documentListManagement')" :active="request()->routeIs('documentListManagement')" wire:navigate>
                 {{ __('書類管理') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('employee.management')" :active="request()->routeIs('dashboard')" wire:navigate>
-                {{ __('従業員管理') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('site.management')" :active="request()->routeIs('dashboard')" wire:navigate>
-                {{ __('現場管理') }}
             </x-responsive-nav-link>
         </div>
 
