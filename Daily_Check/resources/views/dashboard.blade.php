@@ -1,15 +1,17 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-customGreen leading-tight">
-            {{ __('Dashboard') }}
+            {{ __('ダッシュボード') }}
         </h2>
     </x-slot>
+    <!-- Page Footing -->
+    <x-footer />
 
     <div class="py-4">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    {{ __("You're logged in!") }}
+            <div class="bg-white overflow-hidden sm:rounded-lg">
+                <div class="px-6 text-gray-900">
+                    {{ __("ログイン中!") }}
                 </div>
                 <!-- Navigation Links -->
                 <div class="flex flex-col items-center space-y-4 sm:-my-px sm:ms-10">

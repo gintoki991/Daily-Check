@@ -2,7 +2,7 @@
 
   <x-slot name="header">
     <h2 class="font-semibold text-xl text-customGreen text-center leading-tight">
-      {{ __('日報編集ページ') }}
+      {{ __('日報編集') }}
     </h2>
   </x-slot>
 

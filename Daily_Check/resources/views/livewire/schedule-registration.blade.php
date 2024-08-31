@@ -6,7 +6,7 @@
     <form wire:submit.prevent="submit" class="grid grid-cols-1">
         <!-- 現場を選択 -->
         <div class="flex items-center justify-center my-2">
-            <label for="siteSelect" class="text-gray-700 text-sm font-bold mr-2 text-left w-1/3">現場選択:</label>
+            <label for="siteSelect" class="text-gray-700 text-sm font-bold mr-2 text-left w-1/3">現場選択</label>
             <select id="siteSelect" wire:model="selectedSite" class="shadow appearance-none border rounded w-full md:w-2/3 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer">
                 <option value="">選択してください</option>
                 @foreach($sites as $site)
@@ -18,18 +18,18 @@
 
         <!-- 日付を選択 -->
         <div class="flex items-center justify-center my-2">
-            <label for="plan_date" class="text-gray-700 text-sm font-bold mr-2 text-left w-1/3">日付選択:</label>
+            <label for="plan_date" class="text-gray-700 text-sm font-bold mr-2 text-left w-1/3">日付選択</label>
             <input type="date" id="plan_date" wire:model="selectedDate" class="shadow appearance-none border rounded w-full md:w-2/3 py-2 px-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline cursor-pointer">
             @error('selectedDate') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
         </div>
 
         <!-- 従業員を選択 -->
         <div class="flex flex-col items-center justify-center my-4">
-            <label for="employeeSelect" class="text-gray-700 text-sm font-bold text-left w-full">従業員を選択:</label>
+            <label for="employeeSelect" class="text-gray-700 text-sm font-bold text-left w-full">従業員を選択</label>
             <div id="employeeSelect" class="grid sm:grid-cols-2 w-full">
                 @foreach($employees as $employee)
-                <label for="employee-{{ $employee->id }}" class="flex px-2 py-1 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-blue-100 hover:text-blue-800 focus:outline-none focus:bg-blue-100 focus:text-blue-800 dark:bg-neutral-900 dark:border-neutral-700 dark:text-blue-500 dark:hover:bg-blue-800/30 dark:hover:text-blue-400 dark:focus:bg-blue-800/30 dark:focus:text-blue-400 cursor-pointer">
-                    <input type="checkbox" wire:model="selectedEmployees" value="{{ $employee->id }}" class="shrink-0 mt-0.5 border-gray-300 rounded text-blue-600 focus:ring-blue-500 dark:bg-neutral-800 dark:border-neutral-600 dark:checked:bg-blue-500 dark:checked:border-blue-500 dark:focus:ring-offset-gray-800 hover:border-gray-500 cursor-pointer" id="employee-{{ $employee->id }}" @if(in_array($employee->id, $selectedEmployees)) checked @endif>
+                <label for="employee-{{ $employee->id }}" class="flex px-2 py-1 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-blue-100 hover:text-blue-800 focus:outline-none focus:bg-blue-100 focus:text-blue-800 cursor-pointer">
+                    <input type="checkbox" wire:model="selectedEmployees" value="{{ $employee->id }}" class="shrink-0 mt-0.5 border-gray-300 rounded text-blue-600 focus:ring-blue-500 hover:border-gray-500 cursor-pointer" id="employee-{{ $employee->id }}" @if(in_array($employee->id, $selectedEmployees)) checked @endif>
                     <span class="text-sm ms-3">{{ $employee->name }}</span>
                 </label>
                 @endforeach
@@ -39,7 +39,7 @@
 
         <!-- 登録ボタン -->
         <div class="flex justify-center">
-            <button type="submit" class="w-2/3 py-2 px-8 inline-flex justify-center items-center gap-x-2 font-semibold text-lg font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none cursor-pointer">
+            <button type="submit" class="w-2/3 py-2 px-8 inline-flex justify-center items-center gap-x-2 font-semibold text-xl font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none cursor-pointer">
                 登　録
             </button>
         </div>

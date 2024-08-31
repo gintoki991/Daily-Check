@@ -2,7 +2,7 @@
 
   <x-slot name="header">
     <h2 class="font-semibold text-xl text-customGreen text-center leading-tight">
-      {{ __('ホーム画面') }}
+      {{ __('ホーム') }}
     </h2>
   </x-slot>
 

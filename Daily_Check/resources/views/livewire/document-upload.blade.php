@@ -1,11 +1,11 @@
 <div class="max-w-md mx-auto bg-white rounded-lg shadow-md p-6 sm:px-8 sm:py-8">
   <div class="caption-top text-center text-lg font-semibold mb-4">
-    書類をアップロードする
+    書類をアップロード
   </div>
   <form wire:submit.prevent="save" class="grid grid-cols-6 gap-4">
 
     <!-- 書類名 -->
-    <div class="col-span-6">
+    <div class="col-span-6 mr-6">
       <label for="name" class="block text-left text-gray-700 text-sm font-bold mb-2">書類名</label>
       <input type="text" id="name" wire:model="name" placeholder="書類名を入力してください" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
       @error('name') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
@@ -25,7 +25,7 @@
 
     <!-- PDFファイル選択 -->
     <div class="col-span-6">
-      <label for="pdf" class="block text-left text-gray-700 text-sm font-bold mb-2">PDFファイルを選択</label>
+      <label for="pdf" class="block text-left text-gray-700 text-xl font-bold mb-2">PDFファイルを選択</label>
       <input type="file" id="pdf" wire:model="pdf" class="shadow appearance-none border rounded w-full py-2 px-0 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
       @error('pdf') <span class="text-red-500 text-xs">{{ $message }}</span> @enderror
       @if ($pdf)
@@ -37,7 +37,7 @@
 
     <!-- 保存ボタン -->
     <div class="col-span-6 flex justify-center mt-4">
-      <button type="submit" class="w-2/3 py-2 px-8 inline-flex justify-center items-center gap-x-2 font-semibold text-lg font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none cursor-pointer">
+      <button type="submit" class="w-2/3 py-2 px-8 inline-flex justify-center items-center gap-x-2 font-semibold text-xl font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none cursor-pointer">
         保 存
       </button>
     </div>

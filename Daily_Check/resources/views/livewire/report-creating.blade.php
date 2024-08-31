@@ -3,7 +3,7 @@
     <section class="text-white body-font relative">
         <div class="container px-0 py-2 mx-auto">
             <div class="caption-top text-center text-lg font-semibold mb-4">
-                日報を作成する
+                日報を作成
             </div>
 
             <form wire:submit.prevent="store" class="grid grid-cols-1 gap-4 text-left">
