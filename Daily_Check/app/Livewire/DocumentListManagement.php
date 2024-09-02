@@ -47,6 +47,9 @@ class DocumentListManagement extends Component
     {
         $document = Document::find($this->documentToDelete);
         if ($document) {
+            // S3からも削除
+            // Storage::disk('s3')->delete($document->pdf_path);
+
             $document->delete();
             session()->flash('message', '書類を削除しました');
         }

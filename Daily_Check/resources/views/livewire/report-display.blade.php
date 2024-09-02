@@ -20,7 +20,7 @@
                     <th class="py-2">担当者</th>
                     <th class="py-2">作業者</th>
                     <th class="py-2">コメント</th>
-                    <th class="py-2">操作</th> <!-- 編集ボタン用の新しい列 -->
+                    <th class="py-2">操作</th> 
                 </tr>
             </thead>
             <tbody>
