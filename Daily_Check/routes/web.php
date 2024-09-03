@@ -30,6 +30,7 @@ Route::get('logout', function () {
     Auth::logout();
     return redirect('/login');
 });
+Route::post('/logout', [DailyCheckController::class, 'logout'])->name('logout');
 
 Route::get('/dashboard', [DailyCheckController::class, 'index'])->middleware('auth');
 

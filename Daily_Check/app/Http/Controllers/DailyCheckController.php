@@ -9,6 +9,7 @@ use App\Models\Photo;
 use App\Models\User;
 use App\Models\Site;
 use App\Models\Test;
+use App\Livewire\Actions\Logout;
 
 class DailyCheckController extends Controller
 {
@@ -111,6 +112,13 @@ class DailyCheckController extends Controller
         return view('/daily-check/login');
     }
 
+    public function logout()
+    {
+        $logoutAction = new Logout();
+        $logoutAction(); // Logout クラスの __invoke メソッドを実行
+
+        return redirect('/'); // ログアウト後のリダイレクト先を指定
+    }
 
     public function showHome()
     {
