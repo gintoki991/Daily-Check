@@ -40,12 +40,12 @@ class ReportDisplay extends Component
                 ->whereHas('scheduled', function ($query) {
                     $query->where('date', $this->selectedDate);
                 })
-                ->with(['personInCharge', 'roles' => function ($query) {
+                ->with(['personInCharge', 'dailyReportUserRoles' => function ($query) {
                     // フィルタリングに site_id を追加
                     $query->where('is_actual', 1)
-                    ->whereHas('scheduledUser', function ($query) {
-                        $query->where('site_id', $this->selectedSite);
-                    });
+                        ->whereHas('scheduledUser', function ($query) {
+                            $query->where('site_id', $this->selectedSite);
+                        });
                 }])
                 ->get();
         } else {

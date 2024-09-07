@@ -14,12 +14,12 @@ return new class extends Migration
         Schema::create('daily_report_user_roles', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('scheduled_user_id');
-            $table->unsignedBigInteger('daily_reports_id');
+            $table->unsignedBigInteger('daily_report_id');
             $table->boolean('is_actual')->default(false);
             $table->timestamps();
 
             $table->foreign('scheduled_user_id')->references('id')->on('scheduled_user')->onDelete('cascade');
-            $table->foreign('daily_reports_id')->references('id')->on('daily_reports')->onDelete('cascade');
+            $table->foreign('daily_report_id')->references('id')->on('daily_reports')->onDelete('cascade');
         });
     }
 

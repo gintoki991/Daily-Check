@@ -71,7 +71,6 @@ class ScheduleRegistration extends Component
         } catch (ValidationException $e) {
             DB::rollBack();
             Log::error('バリデーションエラー: ' . json_encode($e->errors()));
-            // バリデーションエラーはsession()->flashではなく、自動的にエラーメッセージが表示される
         } catch (\Exception $e) {
             DB::rollBack();
             Log::error('データの保存に失敗しました: ' . $e->getMessage());
@@ -89,36 +88,32 @@ class ScheduleRegistration extends Component
                 if (is_null($this->scheduled_id) || is_null($employeeId) || is_null($this->selectedSite)) {
                     throw new \Exception('ScheduledUser creation failed due to null value(s).');
                 }
+
                 Log::info('ScheduledUser creation parameters:', [
                     'scheduled_id' => $this->scheduled_id,
                     'user_id' => $employeeId,
                     'site_id' => $this->selectedSite,
                 ]);
 
-                // まずはScheduledUserを作成
+                // `ScheduledUser` を作成
                 $scheduledUser = ScheduledUser::firstOrCreate([
                     'scheduled_id' => $this->scheduled_id,
                     'user_id' => $employeeId,
                     'site_id' => $this->selectedSite,
                 ]);
 
-                $scheduledUser->refresh(); // データベースから最新の情報を取得
-                $this->scheduledUser_id = $scheduledUser->id;
+                if ($scheduledUser->wasRecentlyCreated) {
+                    Log::info('ScheduledUser ID created: ', ['scheduledUser_id' => $scheduledUser->id]);
+                } else {
+                    // 既に存在する場合、`scheduled_user_roles` テーブルを確認
+                    $existingRole = ScheduledUserRole::where('scheduled_user_id', $scheduledUser->id)
+                        ->where('is_scheduled', true)
+                        ->first();
 
-                if ($this->scheduledUser_id === null) {
-                    throw new \Exception('ScheduledUser ID is null after creation.');
-                }
-
-                Log::info('ScheduledUser ID created: ', ['scheduledUser_id' => $this->scheduledUser_id]);
-
-                // `ScheduledUserRole`に`is_scheduled`が`1`のレコードがあるか確認
-                $existingRole = ScheduledUserRole::where('scheduled_user_id', $scheduledUser->id)
-                    ->where('is_scheduled', true)
-                    ->first();
-
-                if ($existingRole) {
-                    // 既に`is_scheduled`が`1`のレコードが存在する場合は、重複として処理
-                    $this->duplicateEntries[] = User::find($employeeId)->name;
+                    if ($existingRole) {
+                        $this->duplicateEntries[] = User::find($employeeId)->name;
+                        continue; // 次のループに進む
+                    }
                 }
             } catch (\Exception $e) {
                 Log::error('Error creating ScheduledUser for employeeId: ' . $employeeId, ['error' => $e->getMessage()]);
@@ -147,14 +142,21 @@ class ScheduleRegistration extends Component
         }
     }
 
-    //ScheduledUserRoleにデータを保存
     protected function createScheduledUserRole($scheduledUser)
     {
-        ScheduledUserRole::create([
-            'scheduled_user_id' => $scheduledUser->id,
-            'is_actual' => false,
-            'is_scheduled' => true,
-        ]);
+        // 重複チェック: 既に `is_scheduled` が `1` のレコードが存在するか確認
+        $existingRole = ScheduledUserRole::where('scheduled_user_id', $scheduledUser->id)
+            ->where('is_scheduled', true)
+            ->first();
+
+        if (!$existingRole) {
+            ScheduledUserRole::create([
+                'scheduled_user_id' => $scheduledUser->id,
+                'is_scheduled' => true,
+            ]);
+        } else {
+            Log::info('ScheduledUserRole already exists for ScheduledUser ID:', ['scheduled_user_id' => $scheduledUser->id]);
+        }
     }
 
     public function render()

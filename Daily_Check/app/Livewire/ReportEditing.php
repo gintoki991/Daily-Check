@@ -11,6 +11,7 @@ use App\Models\Site;
 use App\Models\Scheduled;
 use App\Models\ScheduledUser;
 use App\Models\ScheduledUserRole;
+use App\Models\DailyReportUserRole;
 use Illuminate\Validation\ValidationException;
 use Carbon\Carbon;
 
@@ -46,7 +47,7 @@ class ReportEditing extends Component
         $this->sites = Site::all();
 
         try {
-            $report = DailyReport::with(['actualUsers', 'scheduled', 'personInCharge'])->findOrFail($reportId);
+            $report = DailyReport::with(['dailyReportUserRoles.scheduledUser', 'scheduled', 'personInCharge'])->findOrFail($reportId);
             Log::info('DailyReport found with reportId: ' . $reportId);
 
             $this->start_time = $report->start_time;
@@ -55,7 +56,7 @@ class ReportEditing extends Component
             $this->date = $report->scheduled->date;
             $this->person_in_charge = $report->person_in_charge;
             $this->comment = $report->comment;
-            $this->selectedEmployees = $report->actualUsers->pluck('id')->toArray();
+            $this->selectedEmployees = $report->dailyReportUserRoles->pluck('scheduledUser.user.id')->toArray();
             $this->scheduled_id = $report->scheduled_id;
         } catch (\Exception $e) {
             Log::error('Error in ReportEditing mount: ' . $e->getMessage());
@@ -94,14 +95,14 @@ class ReportEditing extends Component
             // 1. 全ての ScheduledUser をトランザクション内で作成
             $this->createAllScheduledUsers();
 
+            // 2. 全ての DailyReportUserRole をトランザクション内で作成
+            $this->createAllDailyReportUserRoles();
+
             DB::commit();
             Log::info('Transaction committed.');
 
-            // 2. トランザクション外で ScheduledUserRole を一度に作成
-            $this->createAllScheduledUserRoles();
-
             session()->flash('success', '日報が正常に更新されました。');
-            return redirect()->route('report-display', ['date' => $this->date, 'site_id' => $this->selectedSite]);
+            return redirect()->route('ReportDisplay', ['date' => $this->date, 'site_id' => $this->selectedSite]);
         } catch (ValidationException $e) {
             DB::rollBack();
             Log::error('Validation error: ' . json_encode($e->errors()));
@@ -115,16 +116,6 @@ class ReportEditing extends Component
 
     protected function createAllScheduledUsers()
     {
-        // 既存のScheduledUserとScheduledUserRoleを削除
-        ScheduledUserRole::whereHas('scheduledUser', function ($query) {
-            $query->where('scheduled_id', $this->scheduled_id);
-        })->delete();
-        Log::info('Existing ScheduledUserRoles deleted.');
-
-        ScheduledUser::where('scheduled_id', $this->scheduled_id)->delete();
-        Log::info('Existing ScheduledUsers deleted.');
-
-        // 新しいScheduledUserを作成
         foreach ($this->selectedEmployees as $employeeId) {
             try {
                 Log::info("Creating ScheduledUser for employeeId: $employeeId");
@@ -135,16 +126,24 @@ class ReportEditing extends Component
                     'site_id' => $this->selectedSite,
                 ]);
 
-                $scheduledUser->refresh();
-                Log::info('ScheduledUser created or found with ID: ' . $scheduledUser->id);
+                if ($scheduledUser->exists) {
+                    Log::info('ScheduledUser found or created successfully with ID: ' . $scheduledUser->id);
+                } else {
+                    Log::warning('ScheduledUser creation failed or does not exist after creation.');
+                }
             } catch (\Exception $e) {
                 Log::error('Error creating ScheduledUser for employeeId: ' . $employeeId . ' - ' . $e->getMessage());
             }
         }
     }
 
-    protected function createAllScheduledUserRoles()
+    protected function createAllDailyReportUserRoles()
     {
+        // 既存のDailyReportUserRoleを削除
+        DailyReportUserRole::where('daily_report_id', $this->reportId)->delete();
+        Log::info('Existing DailyReportUserRoles deleted.');
+
+        // 新しいDailyReportUserRoleを作成
         foreach ($this->selectedEmployees as $employeeId) {
             try {
                 $scheduledUser = ScheduledUser::where('scheduled_id', $this->scheduled_id)
@@ -153,35 +152,35 @@ class ReportEditing extends Component
                     ->first();
 
                 if ($scheduledUser) {
-                    Log::info('Creating ScheduledUserRole for ScheduledUser ID:', ['scheduled_user_id' => $scheduledUser->id]);
-                    $this->createScheduledUserRole($scheduledUser);
+                    Log::info('Creating DailyReportUserRole for ScheduledUser ID:', ['scheduled_user_id' => $scheduledUser->id]);
+                    $this->createDailyReportUserRole($scheduledUser);
                 } else {
                     Log::warning('ScheduledUser not found for employeeId: ' . $employeeId);
                     throw new \Exception('ScheduledUser not found after creation.');
                 }
             } catch (\Exception $e) {
-                Log::error('Error creating ScheduledUserRole for employeeId: ' . $employeeId . ' - ' . $e->getMessage());
+                Log::error('Error creating DailyReportUserRole for employeeId: ' . $employeeId . ' - ' . $e->getMessage());
             }
         }
     }
 
-    protected function createScheduledUserRole($scheduledUser)
+    protected function createDailyReportUserRole($scheduledUser)
     {
-        // 重複チェック: ScheduledUserRoleが既に存在するか確認
-        $existingRole = ScheduledUserRole::where('scheduled_user_id', $scheduledUser->id)
+        // 重複チェック: DailyReportUserRoleが既に存在するか確認
+        $existingRole = DailyReportUserRole::where('scheduled_user_id', $scheduledUser->id)
+            ->where('daily_report_id', $this->reportId)
             ->where('is_actual', true)
-            ->where('is_scheduled', true)
             ->first();
 
         if (!$existingRole) {
-            ScheduledUserRole::create([
+            DailyReportUserRole::create([
                 'scheduled_user_id' => $scheduledUser->id,
-                'is_scheduled' => true,
+                'daily_report_id' => $this->reportId,
                 'is_actual' => true,
             ]);
-            Log::info('ScheduledUserRole created for ScheduledUser ID: ' . $scheduledUser->id);
+            Log::info('DailyReportUserRole created for ScheduledUser ID: ' . $scheduledUser->id);
         } else {
-            Log::info('ScheduledUserRole already exists, skipping creation for ScheduledUser ID: ' . $scheduledUser->id);
+            Log::info('DailyReportUserRole already exists, skipping creation for ScheduledUser ID: ' . $scheduledUser->id);
         }
     }
 

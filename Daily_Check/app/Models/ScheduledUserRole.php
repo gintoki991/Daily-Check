@@ -12,7 +12,6 @@ class ScheduledUserRole extends Model
   protected $fillable = [
     'scheduled_user_id',
     'is_scheduled',
-    'is_actual',
   ];
 
   public function scheduledUser()

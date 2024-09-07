@@ -20,7 +20,7 @@
                     <th class="py-2">担当者</th>
                     <th class="py-2">作業者</th>
                     <th class="py-2">コメント</th>
-                    <th class="py-2">操作</th> 
+                    <th class="py-2">操作</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,9 +33,9 @@
                     </td>
                     <td class="py-2">{{ $report->personInCharge->name }}</td>
                     <td class="py-2">
-                        @if($report->roles->isNotEmpty())
-                        @foreach($report->roles as $role)
-                        @if($role->scheduledUser->scheduled_id == $report->scheduled_id) <!-- リレーションを確認 -->
+                        @if($report->dailyReportUserRoles->isNotEmpty())
+                        @foreach($report->dailyReportUserRoles as $role)
+                        @if($role->scheduledUser->scheduled_id == $report->scheduled_id)
                         {{ $role->scheduledUser->user->name }}<br>
                         @endif
                         @endforeach

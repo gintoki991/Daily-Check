@@ -36,14 +36,6 @@ class DailyReport extends Model
         return $this->belongsTo(Site::class);
     }
 
-    // Userとのリレーション設定（中間テーブル使用）
-    // public function users()
-    // {
-    //     return $this->belongsToMany(User::class, 'scheduled_user', 'scheduled_id', 'user_id')
-    //     ->withPivot('site_id')
-    //     ->using(ScheduledUser::class);
-    // }
-
     // 実際に参加したユーザー（ScheduledUserRoleを通じて取得）
     public function actualUsers()
     {
