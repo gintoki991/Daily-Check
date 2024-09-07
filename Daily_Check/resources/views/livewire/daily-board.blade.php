@@ -4,16 +4,18 @@
     </div>
 
     <table class="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
-        <!-- <thead class="bg-gray-50">
-            <tr>
-                <th class="w-1/3 px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">項目</th>
-                <th class="w-2/3 px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">内容</th>
-            </tr>
-        </thead> -->
         <tbody class="divide-y divide-gray-200">
             <tr>
                 <td class="w-1/3 px-3 py-1 text-sm font-medium text-gray-800">現場名</td>
-                <td class="w-2/3 px-3 py-1 text-sm text-gray-800">{{ $currentSiteName }}</td>
+                <td class="w-2/3 px-3 py-1 text-sm text-gray-800">
+                    <ul class="list-disc pl-3">
+                        @forelse($currentSiteNames as $siteName)
+                        <li>{{ $siteName }}</li>
+                        @empty
+                        <li>未定</li>
+                        @endforelse
+                    </ul>
+                </td>
             </tr>
             <tr>
                 <td class="w-1/3 px-3 py-1 text-sm font-medium text-gray-800">連絡事項</td>

@@ -36,7 +36,6 @@ class PhotoUpload extends Component
         $path = $this->photo->store('photos', 'public');
         // (本番環境用)S3に画像を保存し、パスを取得,S3上の画像のURLを生成
         // $path = $this->photo->store('photos', 's3');
-        // $url = Storage::disk('s3')->url($path);//必要なし
 
         // 日付に対応するScheduledレコードを取得または作成
         $scheduled = Scheduled::firstOrCreate([
@@ -46,13 +45,13 @@ class PhotoUpload extends Component
         ]);
 
         Photo::create([
-            'path' => $path, 
+            'path' => $path,
             'site_id' => $this->site_id,
             'scheduled_id' => $scheduled->id,
             'part' => $this->part,
         ]);
 
-        session()->flash('message', '写真が正常にアップロードされました。');
+        session()->flash('message', '写真がアップロードされました。');
 
         $this->reset(['photo', 'site_id', 'part', 'photo_date']);
     }
