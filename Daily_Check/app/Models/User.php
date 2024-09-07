@@ -22,7 +22,6 @@ class User extends Authenticatable
         'email',
         'password',
         'belong_to',
-        'daily_report_id',
     ];
 
     /**
@@ -35,30 +34,18 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    // リレーション設定
-    public function scheduleds()
+    // Siteとの多対多リレーション
+    public function sites()
     {
-        return $this->hasMany(Scheduled::class);
+        return $this->belongsToMany(Site::class, 'scheduled_user', 'user_id', 'site_id')
+            ->withPivot('scheduled_id')
+            ->using(ScheduledUser::class);
     }
-
-    public function daily_reports()
+    // ScheduledUser とのリレーション
+    public function scheduledUsers()
     {
-        return $this->hasMany(DailyReport::class);
+        return $this->hasMany(ScheduledUser::class, 'user_id');
     }
-
-    // DailyReportとのリレーション設定（中間テーブル使用）
-    public function dailyReports()
-    {
-        return $this->belongsToMany(DailyReport::class, 'daily_report_user', 'user_id', 'daily_report_id')
-            ->withPivot('is_scheduled', 'is_actual', 'site_id')
-            ->using(DailyReportUser::class);
-    }
-
-    // // sitesとのリレーション設定（中間テーブル使用）
-    // public function sites()
-    // {
-    //     return $this->belongsToMany(Site::class, 'sites_users', 'user_id', 'site_id');
-    // }
 
     /**
      * The attributes that should be cast.

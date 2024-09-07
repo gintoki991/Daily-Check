@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('scheduled_user_roles', function (Blueprint $table) {
+        Schema::create('daily_report_user_roles', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('scheduled_user_id');
-            $table->boolean('is_scheduled')->default(false);
+            $table->unsignedBigInteger('daily_reports_id');
+            $table->boolean('is_actual')->default(false);
             $table->timestamps();
 
             $table->foreign('scheduled_user_id')->references('id')->on('scheduled_user')->onDelete('cascade');
+            $table->foreign('daily_reports_id')->references('id')->on('daily_reports')->onDelete('cascade');
         });
     }
 
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('scheduled_user_roles');
+        Schema::dropIfExists('daily_report_user_roles');
     }
 };

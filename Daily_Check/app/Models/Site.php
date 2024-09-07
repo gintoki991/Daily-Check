@@ -11,34 +11,37 @@ class Site extends Model
 
     protected $fillable = [
         'name',
-        'user_id'
+        // 'user_id'
     ];
 
-    // // usersとのリレーション設定（中間テーブル使用）
-    // public function users()
-    // {
-    //     return $this->belongsToMany(User::class, 'article_tags', 'article_id', 'tag_id');
-    // }
+    // daily_reportsとのリレーション設定
+    public function dailyReports()
+    {
+        return $this->hasMany(DailyReport::class);
+    }
+
+    // photosとのリレーション設定
+    public function photos()
+    {
+        return $this->hasMany(Photo::class);
+    }
 
     // documentsとのリレーション設定
     public function documents()
     {
         return $this->hasMany(Document::class);
     }
-    public function scheduleds()
+
+    // Userとの多対多リレーション（中間テーブルScheduledUser使用）
+    public function users()
     {
-        return $this->hasMany(Scheduled::class);
+        return $this->belongsToMany(User::class, 'scheduled_user', 'site_id', 'user_id')
+        ->withPivot('scheduled_id')
+        ->using(ScheduledUser::class);
     }
-    public function daily_reports()
+    // ScheduledUser （中間テーブル）とのリレーション
+    public function scheduledUsers()
     {
-        return $this->hasMany(DailyReport::class);
-    }
-    public function daily_reports_users_links()
-    {
-        return $this->hasMany(DailyReportUser::class);
-    }
-    public function photos()
-    {
-        return $this->hasMany(Photo::class);
+        return $this->hasMany(ScheduledUser::class, 'site_id');
     }
 }
