@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\Photo;
 use App\Models\User;
 use App\Models\Site;
-use App\Models\Test;
 use App\Livewire\Actions\Logout;
 
 class DailyCheckController extends Controller
@@ -21,33 +20,6 @@ class DailyCheckController extends Controller
     {
         $this->middleware('auth');
     }
-    public function testCreate()
-    {
-        return view('/daily-check/test_creating');
-    }
-    public function testStore(Request $request)
-    {
-        try {
-            // バリデーションルールを指定する
-            $validated = $request->validate([
-                'belong_to' => 'required|string|max:255',
-                'name' => 'required|string|max:255',
-            ]);
-
-            // データを保存する
-            Test::create([
-                'belong_to' => $validated['belong_to'],
-                'name' => $validated['name'],
-            ]);
-
-            session()->flash('message', 'Test created successfully.');
-        } catch (ValidationException $e) {
-            // バリデーションエラーメッセージを表示
-            dd($e->errors());
-        }
-        return redirect()->route('test.create')->with('message', 'Test created successfully.');
-    }
-
 
     public function managerPage()
     {

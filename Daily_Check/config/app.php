@@ -169,8 +169,6 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\VoltServiceProvider::class,
-        // 画像アップロード用
-        Intervention\Image\ImageServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -186,8 +184,6 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
-        // 画像アップロード用
-        'Image' => Intervention\Image\Facades\Image::class,
     ])->toArray(),
 
 ];
