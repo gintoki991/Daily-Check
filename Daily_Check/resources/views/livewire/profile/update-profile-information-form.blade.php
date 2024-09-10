@@ -26,8 +26,14 @@ new class extends Component
      */
     public function updateProfileInformation(): void
     {
+        /** @var \App\Models\User $user */
         $user = Auth::user();
 
+        if (! $user instanceof User) {
+            // ユーザーが正しく取得されていない場合のエラーハンドリング
+            return;
+        }
+        
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($user->id)],
@@ -47,20 +53,20 @@ new class extends Component
     /**
      * Send an email verification notification to the current user.
      */
-    public function sendVerification(): void
-    {
-        $user = Auth::user();
+    // public function sendVerification(): void
+    // {
+    //     $user = Auth::user();
 
-        if ($user->hasVerifiedEmail()) {
-            $this->redirectIntended(default: RouteServiceProvider::HOME);
+    //     if ($user->hasVerifiedEmail()) {
+    //         $this->redirectIntended(default: RouteServiceProvider::HOME);
 
-            return;
-        }
+    //         return;
+    //     }
 
-        $user->sendEmailVerificationNotification();
+    //     $user->sendEmailVerificationNotification();
 
-        Session::flash('status', 'verification-link-sent');
-    }
+    //     Session::flash('status', 'verification-link-sent');
+    // }
 }; ?>
 
 <section>

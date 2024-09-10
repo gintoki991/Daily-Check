@@ -28,7 +28,15 @@ new class extends Component
             throw $e;
         }
 
-        Auth::user()->update([
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        if (! $user instanceof \App\Models\User) {
+            // ユーザーが正しく取得されていない場合のエラーハンドリング
+            return;
+        }
+
+        $user->update([
             'password' => Hash::make($validated['password']),
         ]);
 

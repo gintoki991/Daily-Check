@@ -64,7 +64,7 @@ Route::get('/daily-check/photo', PhotoList::class)->name('photoList');
 Route::get('/daily-check/photo-list-management', PhotoListManagement::class)->name('photoListManagement');
 
 Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth'])
     ->name('dashboard');
 
 Route::view('profile', 'profile')
