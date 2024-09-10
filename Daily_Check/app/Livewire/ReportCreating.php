@@ -12,6 +12,7 @@ use App\Models\Site;
 use App\Models\Scheduled;
 use App\Models\ScheduledUser;
 use App\Models\ScheduledUserRole;
+use App\Models\DailyReportUserRole;
 use Illuminate\Validation\ValidationException;
 use Carbon\Carbon;
 
@@ -60,6 +61,13 @@ class ReportCreating extends Component
             // 日付を正しい形式に変換
             $formattedDate = Carbon::parse($this->date)->format('Y-m-d');
 
+            // 重複チェック: 同じ日付、現場、現場責任者の組み合わせが既に存在するか確認
+            if ($this->checkForDuplicateReport($formattedDate, $this->selectedSite, $this->person_in_charge)) {
+                throw ValidationException::withMessages([
+                    'duplicate' => '日報は既に作成されています。',
+                ]);
+            }
+
             // Scheduledテーブルにデータを保存または取得
             $scheduled = Scheduled::firstOrCreate(['date' => $formattedDate]);
             $this->scheduled_id = $scheduled->id;
@@ -79,19 +87,19 @@ class ReportCreating extends Component
             Log::info('DailyReport created: ', $report->toArray());
 
             // 1. 全ての ScheduledUser をトランザクション内で作成
-            $this->createAllScheduledUsers();
+            $this->createAllScheduledUsers($report->id);
 
             DB::commit();
 
-            // 2. トランザクション外で ScheduledUserRole を一度に作成
-            $this->createAllScheduledUserRoles();
+            // 2. トランザクション外で DailyReportUserRole を一度に作成
+            $this->createAllDailyReportUserRoles($report->id);
 
             session()->flash('success', '日報が正常に提出されました。');
             $this->reset(['date', 'start_time', 'end_time', 'person_in_charge', 'comment', 'selectedEmployees', 'part', 'selectedSite', 'scheduled_id']);
         } catch (ValidationException $e) {
             DB::rollBack();
             Log::error('バリデーションエラー: ' . json_encode($e->errors()));
-            session()->flash('error', 'バリデーションエラーが発生しました。');
+            session()->flash('error', '「日付，現場，現場責任者」が重複しています。情報を追加・編集したい場合は，日報閲覧ページの「編集」ボタンをクリックしてください。');
             $this->resetErrorBag();
         } catch (\Exception $e) {
             DB::rollBack();
@@ -100,13 +108,29 @@ class ReportCreating extends Component
         }
     }
 
-    protected function createAllScheduledUsers()
+    // 重複チェックメソッド
+    protected function checkForDuplicateReport($formattedDate, $siteId, $personInCharge)
+    {
+        $existingScheduled = Scheduled::where('date', $formattedDate)->first();
+
+        if ($existingScheduled) {
+            $existingReport = DailyReport::where('scheduled_id', $existingScheduled->id)
+                ->where('site_id', $siteId)
+                ->where('person_in_charge', $personInCharge)
+                ->exists();
+
+            return $existingReport;
+        }
+
+        return false;
+    }
+
+    protected function createAllScheduledUsers($dailyReportId)
     {
         foreach ($this->selectedEmployees as $employeeId) {
             try {
                 Log::info("Creating ScheduledUser for employeeId: $employeeId");
 
-                // 変数が適切に設定されているか確認
                 if (is_null($this->scheduled_id) || is_null($employeeId) || is_null($this->selectedSite)) {
                     throw new \Exception('ScheduledUser creation failed due to null value(s).');
                 }
@@ -116,28 +140,29 @@ class ReportCreating extends Component
                     'site_id' => $this->selectedSite,
                 ]);
 
-                // まずはScheduledUserを作成
                 $scheduledUser = ScheduledUser::firstOrCreate([
                     'scheduled_id' => $this->scheduled_id,
                     'user_id' => $employeeId,
                     'site_id' => $this->selectedSite,
                 ]);
 
-                $scheduledUser->refresh(); // データベースから最新の情報を取得
-                $this->scheduledUser_id = $scheduledUser->id;
+                $scheduledUser->refresh();
 
-                if ($this->scheduledUser_id === null) {
+                if ($scheduledUser->id === null) {
                     throw new \Exception('ScheduledUser ID is null after creation.');
                 }
 
-                Log::info('ScheduledUser ID created: ', ['scheduledUser_id' => $this->scheduledUser_id]);
+                Log::info('ScheduledUser ID created: ', ['scheduledUser_id' => $scheduledUser->id]);
+
+                // `DailyReportUserRole` を作成
+                $this->createDailyReportUserRole($scheduledUser, $dailyReportId);
             } catch (\Exception $e) {
                 Log::error('Error creating ScheduledUser for employeeId: ' . $employeeId, ['error' => $e->getMessage()]);
             }
         }
     }
 
-    protected function createAllScheduledUserRoles()
+    protected function createAllDailyReportUserRoles($dailyReportId)
     {
         foreach ($this->selectedEmployees as $employeeId) {
             try {
@@ -147,24 +172,23 @@ class ReportCreating extends Component
                     ->first();
 
                 if ($scheduledUser) {
-                    Log::info('Creating ScheduledUserRole for ScheduledUser ID:', ['scheduled_user_id' => $scheduledUser->id]);
-                    $this->createScheduledUserRole($scheduledUser);
+                    Log::info('Creating DailyReportUserRole for ScheduledUser ID:', ['scheduled_user_id' => $scheduledUser->id]);
+                    $this->createDailyReportUserRole($scheduledUser, $dailyReportId);
                 } else {
                     throw new \Exception('ScheduledUser not found after creation.');
                 }
             } catch (\Exception $e) {
-                Log::error('Error creating ScheduledUserRole for employeeId: ' . $employeeId, ['error' => $e->getMessage()]);
+                Log::error('Error creating DailyReportUserRole for employeeId: ' . $employeeId, ['error' => $e->getMessage()]);
             }
         }
     }
 
-    //ScheduledUserRoleにデータを保存
-    protected function createScheduledUserRole($scheduledUser)
+    protected function createDailyReportUserRole($scheduledUser, $dailyReportId)
     {
-        ScheduledUserRole::create([
+        DailyReportUserRole::create([
             'scheduled_user_id' => $scheduledUser->id,
+            'daily_report_id' => $dailyReportId,
             'is_actual' => true,
-            'is_scheduled' => false,
         ]);
     }
 

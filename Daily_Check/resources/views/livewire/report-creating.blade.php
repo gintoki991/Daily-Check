@@ -11,18 +11,27 @@
                 <div>
                     <label for="report_create_date" class="block text-sm font-medium text-gray-700">日付を選択</label>
                     <input type="date" id="report_create_date" wire:model="date" class="mt-1 w-5/6 rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                    @error('date') <!-- バリデーションエラーメッセージの表示 -->
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- 開始時間を選択 -->
                 <div>
                     <label for="start_time" class="block text-sm font-medium text-gray-700">開始時間</label>
                     <input type="time" id="start_time" wire:model="start_time" class="mt-1 w-5/6 rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                    @error('start_time')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- 終了時間を選択 -->
                 <div>
                     <label for="end_time" class="block text-sm font-medium text-gray-700">終了時間</label>
                     <input type="time" id="end_time" wire:model="end_time" class="mt-1 w-5/6 rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 cursor-pointer">
+                    @error('end_time')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- 現場を選択 -->
@@ -34,6 +43,9 @@
                         <option value="{{ $site->id }}">{{ $site->name }}</option>
                         @endforeach
                     </select>
+                    @error('selectedSite')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- 現場責任者 -->
@@ -45,6 +57,9 @@
                         <option value="{{ $employee->id }}">{{ $employee->name }}</option>
                         @endforeach
                     </select>
+                    @error('person_in_charge')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- 実際に現場に入った人チェックボックス -->
@@ -58,12 +73,18 @@
                         </label>
                         @endforeach
                     </div>
+                    @error('selectedEmployees')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- コメント入力欄 -->
                 <div>
                     <label for="comment" class="block text-sm font-medium text-gray-700">コメント</label>
                     <textarea id="comment" wire:model="comment" class="mt-2 w-5/6 rounded-lg border-gray-200 bg-white shadow-sm sm:text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none cursor-pointer" rows="4" placeholder="連絡事項を入力してください"></textarea>
+                    @error('comment')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- 送信ボタン -->
@@ -73,6 +94,13 @@
                     </button>
                 </div>
             </form>
+
+            <!-- 重複エラーメッセージ -->
+            @if (session()->has('error'))
+            <div class="mt-4 text-center text-white font-semibold">
+                {{ session('error') }}
+            </div>
+            @endif
         </div>
     </section>
 

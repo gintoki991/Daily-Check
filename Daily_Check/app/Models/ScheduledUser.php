@@ -17,16 +17,16 @@ class ScheduledUser extends Pivot
         'site_id',
     ];
 
-    // siteとのリレーション設定
-    public function site()
-    {
-        return $this->belongsTo(Site::class);
-    }
-
     // Scheduledとのリレーション設定
     public function scheduled()
     {
         return $this->belongsTo(Scheduled::class, 'scheduled_id');
+    }
+
+    // siteとのリレーション設定
+    public function site()
+    {
+        return $this->belongsTo(Site::class, 'site_id');
     }
 
     // Userとのリレーション設定
@@ -39,5 +39,10 @@ class ScheduledUser extends Pivot
     public function roles()
     {
         return $this->hasMany(ScheduledUserRole::class, 'scheduled_user_id');
+    }
+    // DailyReportUserRolesとのリレーション設定
+    public function dailyReportUserRoles()
+    {
+        return $this->hasMany(DailyReportUserRole::class, 'scheduled_user_id');
     }
 }

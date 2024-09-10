@@ -30,6 +30,7 @@ Route::get('logout', function () {
     Auth::logout();
     return redirect('/login');
 });
+Route::post('/logout', [DailyCheckController::class, 'logout'])->name('logout');
 
 Route::get('/dashboard', [DailyCheckController::class, 'index'])->middleware('auth');
 
@@ -63,7 +64,7 @@ Route::get('/daily-check/photo', PhotoList::class)->name('photoList');
 Route::get('/daily-check/photo-list-management', PhotoListManagement::class)->name('photoListManagement');
 
 Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
+    ->middleware(['auth'])
     ->name('dashboard');
 
 Route::view('profile', 'profile')

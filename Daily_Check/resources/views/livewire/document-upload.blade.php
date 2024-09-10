@@ -2,7 +2,7 @@
   <div class="caption-top text-center text-lg font-semibold mb-4">
     書類をアップロード
   </div>
-  <form wire:submit.prevent="save" class="grid grid-cols-6 gap-4">
+  <form wire:submit.prevent="save" enctype="multipart/form-data" class="grid grid-cols-6 gap-4">
 
     <!-- 書類名 -->
     <div class="col-span-6 mr-6">
@@ -46,7 +46,7 @@
   <!-- ポップアップメッセージ -->
   @if (session()->has('message'))
   <div x-data="{ show: true }" x-show="show" @click="show = false" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
-    <div class="bg-white rounded-lg p-6 shadow-lg">
+    <div class="bg-white rounded-lg p-6 shadow-lg text-center"> <!-- 中央揃えのために text-center クラスを追加 -->
       <p class="text-lg text-green-600 font-semibold">{{ session('message') }}</p>
       <button @click="show = false" class="mt-4 inline-block bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
         閉じる

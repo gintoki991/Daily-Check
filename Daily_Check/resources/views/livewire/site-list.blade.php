@@ -34,7 +34,7 @@
                     </button>
                     @else
                     <!-- 編集ボタン（濃いグレー） -->
-                    <button wire:click="edit({{ $site->id }})" type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-gray-900 text-gray-500 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 cursor-pointer">
+                    <button wire:click="edit({{ $site->id }})" type="button" class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-gray-900 text-gray-500 hover:bg-blue-700 hover:outline-blue-500 focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 cursor-pointer">
                         編集
                     </button>
                     @endif

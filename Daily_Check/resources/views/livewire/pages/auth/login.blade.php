@@ -21,7 +21,7 @@ new #[Layout('layouts.guest')] class extends Component
 
         Session::regenerate();
 
-        $this->redirectIntended(default: RouteServiceProvider::HOME, navigate: true);
+        $this->redirectIntended(default: route('home'), navigate: true);
     }
 };
 ?>
@@ -33,14 +33,14 @@ new #[Layout('layouts.guest')] class extends Component
     <form wire:submit="login">
         <!-- Name -->
         <div>
-            <x-input-label for="name" :value="__('Name')" />
+            <x-input-label for="name" :value="__('名前')" />
             <x-text-input wire:model="form.name" id="name" class="block mt-1 w-full" type="text" name="name" required autofocus autocomplete="username" />
             <x-input-error :messages="$errors->get('form.name')" class="mt-2" />
         </div>
 
         <!-- Password -->
         <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+            <x-input-label for="password" :value="__('パスワード')" />
 
             <x-text-input wire:model="form.password" id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="current-password" />
 
@@ -56,14 +56,8 @@ new #[Layout('layouts.guest')] class extends Component
         </div>
 
         <div class="flex items-center justify-end mt-4">
-            <!-- @if (Route::has('password.request'))
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}" wire:navigate>
-                {{ __('') }}
-            </a>
-            @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
+            <x-primary-button class="ms-3 bg-blue-500 hover:bg-blue-700 text-white cursor-pointer">
+                {{ __('ログイン') }}
             </x-primary-button>
         </div>
     </form>

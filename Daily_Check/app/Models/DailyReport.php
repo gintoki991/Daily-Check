@@ -18,41 +18,35 @@ class DailyReport extends Model
         'site_id',
     ];
 
-    // usersとのリレーション設定（中間テーブル使用）
-    public function users()
-    {
-        return $this->belongsToMany(User::class, 'scheduled_user', 'scheduled_id', 'user_id')
-            ->withPivot('is_scheduled', 'is_actual', 'site_id')
-            ->using(ScheduledUser::class);
-    }
-
-    // siteとのリレーション設定
-    public function site()
-    {
-        return $this->belongsTo(Site::class);
-    }
-
-    // scheduledとのリレーション設定
-    public function scheduled()
-    {
-        return $this->belongsTo(Scheduled::class);
-    }
-
     // 担当者とのリレーション設定
     public function personInCharge()
     {
         return $this->belongsTo(User::class, 'person_in_charge');
     }
 
-    // 実際に参加したユーザーとのリレーション設定
-    public function scheduledUser()
+    // Scheduledとのリレーション設定
+    public function scheduled()
     {
-        return $this->hasOne(ScheduledUser::class, 'scheduled_id', 'scheduled_id');
+        return $this->belongsTo(Scheduled::class);
     }
 
-    public function roles()
+    // Siteとのリレーション設定
+    public function site()
     {
-        return $this->hasManyThrough(ScheduledUserRole::class, ScheduledUser::class, 'scheduled_id', 'scheduled_user_id', 'scheduled_id', 'id');
+        return $this->belongsTo(Site::class);
     }
 
+    // 実際に参加したユーザー（ScheduledUserRoleを通じて取得）
+    public function actualUsers()
+    {
+        return $this->hasManyThrough(User::class, ScheduledUser::class, 'scheduled_id', 'id', 'scheduled_id', 'user_id')
+            ->join('scheduled_user_roles', 'scheduled_user_roles.scheduled_user_id', '=', 'scheduled_user.id')
+            ->where('scheduled_user_roles.is_actual', true);
+    }
+
+    // DailyReportUserRoleとの新しいリレーション設定
+    public function dailyReportUserRoles()
+    {
+        return $this->hasMany(DailyReportUserRole::class, 'daily_report_id');
+    }
 }
