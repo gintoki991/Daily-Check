@@ -35,13 +35,17 @@ class PhotoUpload extends Component
             'photo_date' => 'required|date',
         ]);
 
-        // ImageManagerインスタンスを作成（GDドライバーを使用）
-        $manager = new ImageManager(new Driver());
-        // 画像を読み込み、リサイズ
-        $image = $manager->read($this->photo->getRealPath());
+        // 一時的にファイルを保存してパスを取得
+        $temporaryPath = $this->photo->store('livewire-tmp', 'local');
 
-        // 画像をリサイズ (幅を800ピクセルに変更し、高さはアスペクト比を保持)
-        $image->resize(800, null, function ($constraint) {
+        // ImageManagerインスタンスを作成（GDドライバーを使用）,version2.7.2用
+        $manager = new ImageManager(['driver' => 'gd']);
+
+        // 一時ファイルの絶対パスを取得
+        $absolutePath = storage_path('app/' . $temporaryPath);
+
+        // 画像をリサイズ
+        $image = $manager->make($absolutePath)->resize(800, null, function ($constraint) {
             $constraint->aspectRatio(); // アスペクト比を保持
             $constraint->upsize(); // 画像が小さくなることを防ぐ
         });
@@ -50,8 +54,13 @@ class PhotoUpload extends Component
         $tempPath = 'photos/' . uniqid() . '.jpg';
         $image->save(storage_path('app/public/' . $tempPath), 75); // 75%の品質で保存
 
-        // 開発環境用
-        $path = $this->photo->store('photos', 'public');
+        // リサイズされた画像をpublicにアップロード
+        $localPath = 'photos/' . uniqid() . '.jpg';
+        Storage::disk('public')->put($localPath, file_get_contents(storage_path('app/public/' . $tempPath)));
+
+        // ローカルの一時ファイルを削除
+        Storage::disk('local')->delete($temporaryPath);
+        Storage::disk('public')->delete($tempPath);
 
         // 日付に対応するScheduledレコードを取得または作成
         $scheduled = Scheduled::firstOrCreate([
@@ -59,7 +68,7 @@ class PhotoUpload extends Component
         ]);
 
         Photo::create([
-            'path' => $path,
+            'path' => $localPath,
             'site_id' => $this->site_id,
             'scheduled_id' => $scheduled->id,
             'part' => $this->part,
