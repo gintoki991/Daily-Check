@@ -4,6 +4,10 @@
 
 URL： https://daily-check.click
 
+ログインする際は以下をお使いください。
+名前：ゲストユーザー
+パスワード：gestPassword
+
 ## クラウドアーキテクチャー
 <img src="./images/Infrastructure.jpeg" alt="クラウドアーキテクチャー" width="600">
 
